@@ -5,6 +5,7 @@ Public promotional website for the SabatKu Android app, published with GitHub Pa
 ## Website contents
 
 - `site/` — responsive, Indonesian-first static landing page and brand assets.
+- The beta APK for testers is published as a GitHub Release asset and linked from the site's download button; it is not a production Play Store release.
 - `.github/workflows/pages.yml` — deploys `site/` to GitHub Pages whenever `main` is updated.
 
 ## Publish

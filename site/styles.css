@@ -41,6 +41,8 @@ h1, h2, h3 { font-family: var(--display); }
 .hero h1 span { color: var(--gold); }
 .hero-lede { max-width: 490px; margin: 24px 0 30px; color: rgba(240,246,255,.7); font-size: 16px; line-height: 1.8; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+.hero .release-note { margin: 16px 0 0; color: rgba(255,255,255,.68); font-size: 11px; }
+.hero .apk-install-note { max-width: 430px; margin: 7px 0 0; color: rgba(240,246,255,.48); font-size: 10px; line-height: 1.6; }
 .button { min-height: 48px; border: 0; border-radius: 999px; padding: 0 22px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; font-weight: 700; font-size: 13px; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
 .button:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(4,20,40,.16); }
 .button-gold { color: var(--navy); background: var(--gold); }
@@ -185,7 +187,8 @@ h1, h2, h3 { font-family: var(--display); }
   .hero h1 { font-size: clamp(47px, 13vw, 66px); }
   .hero-lede { max-width: 420px; margin: 18px 0 21px; font-size: 14px; }
   .hero-actions { align-items: flex-start; flex-direction: column; gap: 13px; }
-  .release-note { font-size: 10px; }
+  .hero .release-note { font-size: 10px; }
+  .hero .apk-install-note { font-size: 9px; }
   .hero-proof { margin-top: 27px; gap: 11px; font-size: 9px; }
   .hero-visual { min-height: 440px; margin-top: 8px; }
   .hero-phone { width: 214px; height: 450px; }
