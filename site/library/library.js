@@ -101,7 +101,15 @@ async function openBook(book) {
     const author = text("p", manifest.work?.author || book.author || "Penulis");
     const attribution = text("p", edition.rights.attribution, "edition-note");
     const cover = document.createElement("img"); cover.className = "reader-cover"; cover.alt = ""; if (book.cover?.path) cover.src = safeUrl(book.cover.path, catalogUrl);
-    const top = document.createElement("div"); top.className = "reader-top"; const metadata = document.createElement("div"); metadata.append(heading, author, attribution, text("p", `${edition.locale.toUpperCase()} · ${edition.revision} · Baca online`, "edition-note")); top.append(cover, metadata);
+    const top = document.createElement("div"); top.className = "reader-top"; const metadata = document.createElement("div"); metadata.append(heading, author, attribution, text("p", `${edition.locale.toUpperCase()} · ${edition.revision} · Baca online`, "edition-note"));
+    if (edition.sourceUrl) {
+      const sourceUrl = new URL(edition.sourceUrl);
+      if (sourceUrl.protocol !== "https:" || sourceUrl.username || sourceUrl.password) throw new Error("Tautan sumber harus memakai HTTPS.");
+      const sourceLink = text("a", "Baca sumber bahasa Inggris di EGW Writings ↗", "source-link");
+      sourceLink.href = sourceUrl.href; sourceLink.target = "_blank"; sourceLink.rel = "noopener noreferrer";
+      metadata.append(sourceLink);
+    }
+    top.append(cover, metadata);
     const toc = document.createElement("nav"); toc.className = "toc"; toc.setAttribute("aria-label", "Daftar isi"); toc.append(text("h3", "Daftar isi")); const ol = document.createElement("ol");
     const nodes = [...manifest.nodes].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
     for (const node of nodes) { const li = document.createElement("li"); const button = text("button", node.title); button.type = "button"; button.addEventListener("click", () => openChapter(book, node, reader)); li.append(button); ol.append(li); }
