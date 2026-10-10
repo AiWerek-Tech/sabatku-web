@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#071a32" />
+    <meta name="description" content="Jelajahi dan baca buku digital SabatKu." />
+    <title>Perpustakaan Buku — SabatKu</title>
+    <link rel="icon" type="image/png" href="../assets/sabatku-symbol.png" />
+    <link rel="stylesheet" href="library.css" />
+    <script src="library.js" defer></script>
+  </head>
+  <body>
+    <header class="library-header">
+      <a href="../" class="brand"><img src="../assets/sabatku-logo-dark.png" alt="SabatKu" /></a>
+      <a href="../" class="back-link">← Beranda SabatKu</a>
+    </header>
+    <main class="library-layout">
+      <aside class="catalog-panel" aria-label="Katalog buku">
+        <div class="panel-heading">
+          <div><p class="eyebrow">PUSTAKA DIGITAL</p><h1>Jelajahi buku</h1></div>
+          <button id="refresh" class="icon-button" type="button" aria-label="Perbarui katalog">↻</button>
+        </div>
+        <label class="search-label" for="search">Cari buku</label>
+        <input id="search" type="search" placeholder="Judul atau penulis" autocomplete="off" />
+        <p id="status" class="status" role="status" aria-live="polite">Memuat katalog…</p>
+        <ul id="book-list" class="book-list"></ul>
+      </aside>
+      <section id="reader" class="reader-panel" aria-live="polite">
+        <div class="welcome"><span aria-hidden="true">📚</span><h2>Pilih buku untuk mulai membaca</h2><p>Buku diterbitkan satu kali dan dapat dibaca di Web maupun Android.</p></div>
+      </section>
+    </main>
+    <footer>Konten tersedia mengikuti bahasa, edisi, dan izin penerbitan masing-masing buku.</footer>
+  </body>
+</html>
