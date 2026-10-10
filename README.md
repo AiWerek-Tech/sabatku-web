@@ -6,6 +6,7 @@ Public promotional website for the SabatKu Android app, published with GitHub Pa
 
 - `site/` — responsive, Indonesian-first static landing page and brand assets.
 - The beta APK for testers is published as a GitHub Release asset and linked from the site's download button; it is not a production Play Store release.
+- `site/index.html#pembaruan` — public changelog for the latest beta. Update this section and the download link with each APK release.
 - `.github/workflows/pages.yml` — deploys `site/` to GitHub Pages whenever `main` is updated.
 
 ## Publish
