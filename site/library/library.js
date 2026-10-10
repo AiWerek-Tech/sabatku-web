@@ -4,7 +4,14 @@ const list = document.querySelector("#book-list");
 const status = document.querySelector("#status");
 const reader = document.querySelector("#reader");
 const search = document.querySelector("#search");
+const languageFilter = document.querySelector("#language-filter");
+const themeFilter = document.querySelector("#theme-filter");
+const collectionFilter = document.querySelector("#collection-filter");
 let books = [];
+let taxonomyLabels = new Map();
+let activePositionKey = null;
+let positionSaveTimer = null;
+const uiLocale = new URLSearchParams(location.search).get("ui") === "en" ? "en" : "id";
 
 function safeUrl(path, base) {
   if (typeof path !== "string" || !path || path.startsWith("/") || path.includes("\\")) throw new Error("Path konten tidak valid.");
@@ -27,12 +34,99 @@ function text(tag, value, className) {
   return element;
 }
 
+function workGroups() {
+  const grouped = new Map();
+  for (const book of books) {
+    if (!grouped.has(book.workId)) grouped.set(book.workId, []);
+    grouped.get(book.workId).push(book);
+  }
+  return [...grouped.values()].map(group => group.sort((a, b) => a.locale.localeCompare(b.locale)));
+}
+
+function preferredEdition(group) {
+  const locale = languageFilter.value || document.documentElement.lang || "id";
+  return group.find(book => book.locale.toLowerCase() === locale.toLowerCase()) || group[0];
+}
+
+function localeName(locale) {
+  if (locale === "id") return "Indonesia";
+  if (locale === "en") return "English";
+  return locale.toUpperCase();
+}
+
+function themeName(id) {
+  const officialLabel = taxonomyLabels.get(`theme:${id}`)?.[uiLocale];
+  if (officialLabel) return officialLabel;
+  const labels = {
+    "prophecy-eschatology": "Nubuat dan Akhir Zaman",
+    "history-biography": "Sejarah dan Biografi",
+    "biblical-studies": "Studi Alkitab",
+    "theology-beliefs": "Teologi dan Keyakinan",
+  };
+  return labels[id] || id.replace(/[-:]/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function collectionName(id) {
+  const officialLabel = taxonomyLabels.get(`collection:${id}`)?.[uiLocale];
+  if (officialLabel) return officialLabel;
+  const labels = {
+    "egw-writings": "Roh Nubuat",
+    "conflict-of-the-ages": "Conflict of the Ages",
+    "young-reader-adaptations": "Adaptasi Pembaca Muda",
+    "sabbath-school-companions": "Buku Pendamping Sekolah Sabat",
+    "official-church-guides": "Pedoman Resmi Gereja",
+  };
+  return labels[id] || id.replace(/-/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function audienceName(id) {
+  return taxonomyLabels.get(`audience:${id}`)?.[uiLocale] || ({ teens: "Remaja", "young-adults": "Pemuda dewasa", adults: "Dewasa", children: "Anak-anak", all: "Semua pembaca", "teachers-parents": "Pengajar dan orang tua" }[id] || id);
+}
+
+function storageGet(key) {
+  try { return localStorage.getItem(`sabatku-library:${key}`); } catch { return null; }
+}
+
+function storageSet(key, value) {
+  try { localStorage.setItem(`sabatku-library:${key}`, value); } catch { /* private browsing may disable storage */ }
+}
+
+window.addEventListener("scroll", () => {
+  if (!activePositionKey) return;
+  clearTimeout(positionSaveTimer);
+  positionSaveTimer = setTimeout(() => storageSet(activePositionKey, String(window.scrollY)), 650);
+}, { passive: true });
+
+function editionStatus(book) {
+  return book.contentMode === "external-link" ? "Online · penyedia resmi" : "Online · SabatKu";
+}
+
+function populateFilters() {
+  const preserve = [languageFilter.value, themeFilter.value, collectionFilter.value];
+  const themes = [...new Set(books.flatMap(book => book.themeIds || []))].sort();
+  const collections = [...new Set(books.flatMap(book => book.collectionIds || []))].sort();
+  themeFilter.replaceChildren(new Option("Semua tema", ""), ...themes.map(id => new Option(themeName(id), id)));
+  collectionFilter.replaceChildren(new Option("Semua koleksi", ""), ...collections.map(id => new Option(collectionName(id), id)));
+  [languageFilter, themeFilter, collectionFilter].forEach((select, index) => {
+    if ([...select.options].some(option => option.value === preserve[index])) select.value = preserve[index];
+  });
+}
+
 function renderList() {
   list.replaceChildren();
   const query = search.value.trim().toLocaleLowerCase();
-  const matches = books.filter(book => `${book.title} ${book.author}`.toLocaleLowerCase().includes(query));
-  for (const book of matches) {
+  const groups = workGroups().filter(group => {
+    const allText = group.flatMap(book => [book.title, book.author, ...(book.themeIds || []), ...(book.collectionIds || []), ...(book.audienceIds || [])]).join(" ").toLocaleLowerCase();
+    return (!languageFilter.value || group.some(book => book.locale === languageFilter.value))
+      && (!themeFilter.value || group.some(book => book.themeIds?.includes(themeFilter.value)))
+      && (!collectionFilter.value || group.some(book => book.collectionIds?.includes(collectionFilter.value)))
+      && allText.includes(query);
+  }).sort((a, b) => preferredEdition(a).title.localeCompare(preferredEdition(b).title, "id", { sensitivity: "base" }));
+
+  for (const group of groups) {
+    const book = preferredEdition(group);
     const li = document.createElement("li");
+    li.className = "work-item";
     const button = document.createElement("button");
     button.type = "button";
     button.className = "book-button";
@@ -43,15 +137,32 @@ function renderList() {
     image.loading = "lazy";
     if (book.cover?.path) image.src = safeUrl(book.cover.path, catalogUrl);
     const copy = document.createElement("span");
-    const localeLabel = book.locale === "id" ? "Indonesia" : book.locale === "en" ? "English" : book.locale.toUpperCase();
-    const modeLabel = book.contentMode === "external-link" ? " · penyedia resmi" : " · SabatKu";
-    copy.append(text("span", book.title, "book-title"), text("span", `${book.author} · ${localeLabel}${modeLabel}`, "book-meta"));
+    copy.className = "work-copy";
+    copy.append(text("span", book.title, "book-title"), text("span", book.author || "Penulis", "book-meta"), text("span", editionStatus(book), "book-meta"));
     button.append(image, copy);
     li.append(button);
+
+    const editions = document.createElement("div");
+    editions.className = "edition-chips";
+    for (const locale of ["id", "en"]) {
+      const edition = group.find(item => item.locale.toLowerCase() === locale);
+      if (!edition) {
+        const unavailable = text("span", `${locale.toUpperCase()} · belum tersedia`, "edition-chip unavailable");
+        unavailable.setAttribute("aria-disabled", "true");
+        editions.append(unavailable);
+      } else {
+        const select = text("button", `${locale.toUpperCase()} · ${edition.contentMode === "external-link" ? "penyedia" : "online"}`, "edition-chip");
+        select.type = "button";
+        select.setAttribute("aria-label", `Pilih edisi ${localeName(locale)}: ${edition.title}`);
+        select.addEventListener("click", () => openBook(edition));
+        editions.append(select);
+      }
+    }
+    li.append(editions);
     list.append(li);
   }
-  if (!matches.length && books.length) status.textContent = "Tidak ada buku yang cocok.";
-  else status.textContent = `${books.length} buku tersedia`;
+  status.classList.remove("error");
+  status.textContent = groups.length ? `${groups.length} karya tersedia · edisi dikelompokkan berdasarkan bahasa` : "Tidak ada buku yang cocok dengan pencarian atau filter.";
 }
 
 async function getJson(url, maxBytes = 2 * 1024 * 1024) {
@@ -64,10 +175,21 @@ async function getJson(url, maxBytes = 2 * 1024 * 1024) {
 
 async function loadCatalog() {
   status.textContent = "Memuat katalog…";
+  status.classList.remove("error");
   try {
     if (new URL(catalogUrl).protocol !== "https:") throw new Error("Katalog buku harus memakai HTTPS.");
     const catalog = await getJson(catalogUrl);
     if (catalog.schemaVersion !== "sabatku-library-v1" || catalog.domain !== "books" || !Array.isArray(catalog.entries)) throw new Error("Format katalog buku tidak didukung.");
+    taxonomyLabels = new Map();
+    if (catalog.taxonomy) {
+      const taxonomyUrl = safeUrl(catalog.taxonomy, catalogUrl);
+      try {
+        const taxonomy = await getJson(taxonomyUrl);
+        for (const [kind, field] of [["theme", "themes"], ["collection", "collections"], ["audience", "audiences"]]) {
+          for (const item of taxonomy[field] || []) taxonomyLabels.set(`${kind}:${item.id}`, item.label || {});
+        }
+      } catch { taxonomyLabels = new Map(); }
+    }
     books = catalog.entries.map(entry => {
       const contentMode = entry.contentMode || "hosted";
       if (contentMode === "external-link") {
@@ -79,7 +201,9 @@ async function loadCatalog() {
       if (contentMode !== "hosted") throw new Error("Jenis edisi buku tidak didukung.");
       return { ...entry, contentMode, manifestUrl: safeUrl(entry.manifest, catalogUrl), author: entry.author || "Penulis" };
     });
+    populateFilters();
     renderList();
+    openRequestedBook();
   } catch (error) {
     status.textContent = error.message || "Katalog buku belum dapat dimuat.";
     status.classList.add("error");
@@ -109,29 +233,69 @@ function renderMarkdown(markdown, container) {
   flush();
 }
 
-async function openBook(book) {
+function addEditionChoices(container, book) {
+  const siblings = books.filter(item => item.workId === book.workId && item.id !== book.id);
+  if (!siblings.length) return;
+  const section = document.createElement("section");
+  section.className = "edition-languages";
+  section.append(text("h3", "Edisi bahasa"));
+  const chips = document.createElement("div");
+  chips.className = "edition-chips";
+  for (const locale of ["id", "en"]) {
+    const edition = books.find(item => item.workId === book.workId && item.locale.toLowerCase() === locale);
+    if (!edition) {
+      const unavailable = text("span", `${locale.toUpperCase()} · belum tersedia`, "edition-chip unavailable");
+      unavailable.setAttribute("aria-disabled", "true");
+      chips.append(unavailable);
+    } else {
+      const choose = text("button", localeName(locale), "edition-chip");
+      choose.type = "button";
+      choose.setAttribute("aria-current", edition.id === book.id ? "true" : "false");
+      choose.addEventListener("click", () => openBook(edition));
+      chips.append(choose);
+    }
+  }
+  section.append(chips);
+  container.append(section);
+}
+
+function addClassification(container, book) {
+  const groups = [
+    ["Tema", (book.themeIds || []).map(themeName)],
+    ["Koleksi", (book.collectionIds || []).map(collectionName)],
+    ["Untuk", (book.audienceIds || []).map(audienceName)],
+  ].filter(([, values]) => values.length);
+  for (const [label, values] of groups) container.append(text("p", `${label}: ${values.join(" · ")}`, "edition-note"));
+}
+
+async function openBook(book, options = {}) {
+  activePositionKey = null;
   if (book.contentMode === "external-link") {
     const heading = text("h2", book.title);
     const author = text("p", book.author || "Ellen G. White");
-    const note = text("p", "Edisi bahasa Inggris ini tersedia langsung dari penyedia resmi. SabatKu tidak menyimpan atau menyalin teks sumber.", "edition-note");
-    const cover = document.createElement("img"); cover.className = "reader-cover"; cover.alt = ""; if (book.cover?.path) cover.src = safeUrl(book.cover.path, catalogUrl);
-    const metadata = document.createElement("div"); metadata.append(heading, author, note, text("p", "English · sumber resmi · perlu internet", "edition-note"));
+    const cover = document.createElement("img"); cover.className = "reader-cover"; cover.alt = `Sampul ${book.title}`; if (book.cover?.path) cover.src = safeUrl(book.cover.path, catalogUrl);
+    const metadata = document.createElement("div"); metadata.append(heading, author, text("p", "Edisi bahasa Inggris tersedia langsung dari penyedia resmi. Perlu internet; SabatKu tidak menyimpan salinan offline.", "edition-note"));
+    addClassification(metadata, book);
     const top = document.createElement("div"); top.className = "reader-top"; top.append(cover, metadata);
-    const formats = document.createElement("nav"); formats.className = "toc"; formats.setAttribute("aria-label", "Sumber edisi bahasa Inggris"); formats.append(text("h3", "Buka edisi bahasa Inggris"));
+    const contents = [top];
+    addEditionChoicesTo(contents, book);
+    if (options.chapterId) {
+      const chapterNumber = options.chapterId.match(/\d+/)?.[0];
+      if (chapterNumber) contents.push(text("p", `Bacaan terkait: bab ${Number(chapterNumber)}. Buka daftar isi penyedia dan pilih bab yang sama.`, "chapter-target"));
+    }
+    const formats = document.createElement("nav"); formats.className = "toc"; formats.setAttribute("aria-label", "Sumber edisi bahasa Inggris"); formats.append(text("h3", "Pilih format bacaan"));
     for (const source of book.sources || []) {
       const url = safeExternalUrl(source.url);
-      const link = text("a", `${source.label} ↗`, "source-link"); link.href = url.href; link.target = "_blank"; link.rel = "noopener noreferrer";
-      formats.append(link);
+      const card = document.createElement("a"); card.className = "source-card"; card.href = url.href; card.target = "_blank"; card.rel = "noopener noreferrer";
+      card.append(text("span", source.label, "source-title"), text("span", "Online · dibuka dari penyedia resmi ↗", "source-meta"));
+      formats.append(card);
     }
-    const otherEditions = books.filter(item => item.workId === book.workId && item.id !== book.id);
-    if (otherEditions.length) {
-      const languages = document.createElement("div"); languages.className = "edition-languages"; languages.append(text("h3", "Edisi bahasa lain"));
-      for (const edition of otherEditions) { const button = text("button", edition.locale === "id" ? "Baca Bahasa Indonesia" : edition.locale.toUpperCase()); button.type = "button"; button.addEventListener("click", () => openBook(edition)); languages.append(button); }
-      reader.replaceChildren(top, formats, languages);
-    } else reader.replaceChildren(top, formats);
+    contents.push(formats);
+    reader.replaceChildren(...contents);
     reader.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
+
   reader.replaceChildren(text("p", "Memuat detail buku…", "status"));
   try {
     const manifest = await getJson(book.manifestUrl);
@@ -140,21 +304,64 @@ async function openBook(book) {
     const heading = text("h2", book.title);
     const author = text("p", manifest.work?.author || book.author || "Penulis");
     const attribution = text("p", edition.rights.attribution, "edition-note");
-    const cover = document.createElement("img"); cover.className = "reader-cover"; cover.alt = ""; if (book.cover?.path) cover.src = safeUrl(book.cover.path, catalogUrl);
-    const top = document.createElement("div"); top.className = "reader-top"; const metadata = document.createElement("div"); metadata.append(heading, author, attribution, text("p", `${edition.locale.toUpperCase()} · ${edition.revision} · Baca online`, "edition-note"));
-    top.append(cover, metadata);
-    const otherEditions = books.filter(item => item.workId === book.workId && item.id !== book.id);
-    const toc = document.createElement("nav"); toc.className = "toc"; toc.setAttribute("aria-label", "Daftar isi"); toc.append(text("h3", "Daftar isi")); const ol = document.createElement("ol");
+    const cover = document.createElement("img"); cover.className = "reader-cover"; cover.alt = `Sampul ${book.title}`; if (book.cover?.path) cover.src = safeUrl(book.cover.path, catalogUrl);
+    const metadata = document.createElement("div"); metadata.append(heading, author, attribution, text("p", "Online · dihosting SabatKu · belum tersedia offline", "edition-note"));
+    if (manifest.work?.summary || edition.summary) metadata.append(text("p", manifest.work?.summary || edition.summary, "book-summary"));
+    addClassification(metadata, book);
+    const top = document.createElement("div"); top.className = "reader-top"; top.append(cover, metadata);
     const nodes = [...manifest.nodes].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
-    for (const node of nodes) { const li = document.createElement("li"); const button = text("button", node.title); button.type = "button"; button.addEventListener("click", () => openChapter(book, node, reader)); li.append(button); ol.append(li); }
+    if (options.chapterId) {
+      const requested = nodes.find(node => node.id === options.chapterId);
+      if (requested) { await openChapter(book, requested, reader); return; }
+    }
+    const readCount = nodes.filter(node => storageGet(`read:${book.workId}:${book.locale}:${node.id}`) === "true").length;
+    const progress = document.createElement("div"); progress.className = "book-progress";
+    const progressBar = document.createElement("progress"); progressBar.max = Math.max(nodes.length, 1); progressBar.value = readCount;
+    progress.append(progressBar, text("span", `${readCount} dari ${nodes.length} bab selesai`), text("span", "Posisi dan progres tersimpan di browser ini."));
+    const toc = document.createElement("nav"); toc.className = "toc"; toc.setAttribute("aria-label", "Daftar isi"); toc.append(text("h3", "Daftar isi")); const ol = document.createElement("ol");
+    for (const node of nodes) {
+      const li = document.createElement("li");
+      const row = document.createElement("div"); row.className = "toc-row";
+      const button = text("button", node.title); button.type = "button"; button.addEventListener("click", () => openChapter(book, node, reader));
+      const saved = storageGet(`bookmark:${book.workId}:${book.locale}:${node.id}`) === "true";
+      const bookmark = text("button", saved ? "Tersimpan" : "Simpan"); bookmark.className = "bookmark-button"; bookmark.type = "button"; bookmark.setAttribute("aria-pressed", String(saved));
+      bookmark.addEventListener("click", () => { const next = storageGet(`bookmark:${book.workId}:${book.locale}:${node.id}`) !== "true"; storageSet(`bookmark:${book.workId}:${book.locale}:${node.id}`, String(next)); bookmark.textContent = next ? "Tersimpan" : "Simpan"; bookmark.setAttribute("aria-pressed", String(next)); });
+      row.append(button, bookmark); li.append(row); ol.append(li);
+    }
     toc.append(ol);
-    const languages = document.createElement("div"); languages.className = "edition-languages"; languages.append(text("h3", "Edisi bahasa lain"));
-    for (const other of otherEditions) { const button = text("button", other.locale === "en" ? "Read in English" : other.locale === "id" ? "Baca Bahasa Indonesia" : other.locale.toUpperCase()); button.type = "button"; button.addEventListener("click", () => openBook(other)); languages.append(button); }
-    reader.replaceChildren(top, ...(otherEditions.length ? [languages] : []), toc);
-  } catch (error) { reader.replaceChildren(text("p", error.message || "Detail buku belum dapat dimuat.", "error")); }
+    const otherEditions = books.filter(item => item.workId === book.workId && item.id !== book.id);
+    const parts = [top, progress];
+    addEditionChoicesTo(parts, book);
+    const lastId = storageGet(`last:${book.workId}:${book.locale}`);
+    const lastNode = nodes.find(node => node.id === lastId);
+    if (lastNode) {
+      const resume = text("button", `Lanjutkan membaca · ${lastNode.title}`, "resume-button"); resume.type = "button"; resume.addEventListener("click", () => openChapter(book, lastNode, reader)); parts.push(resume);
+    }
+    parts.push(toc);
+    reader.replaceChildren(...parts);
+  } catch (error) {
+    const message = text("p", error.message || "Detail buku belum dapat dimuat.", "error");
+    const retry = text("button", "Coba lagi", "retry"); retry.type = "button"; retry.addEventListener("click", () => openBook(book, options));
+    reader.replaceChildren(message, retry);
+  }
+  reader.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function addEditionChoicesTo(destination, book) {
+  const siblings = books.filter(item => item.workId === book.workId);
+  if (siblings.length < 2) return;
+  const section = document.createElement("section"); section.className = "edition-languages"; section.append(text("h3", "Edisi bahasa"));
+  const chips = document.createElement("div"); chips.className = "edition-chips";
+  for (const locale of ["id", "en"]) {
+    const edition = siblings.find(item => item.locale.toLowerCase() === locale);
+    if (!edition) { const unavailable = text("span", `${locale.toUpperCase()} · belum tersedia`, "edition-chip unavailable"); unavailable.setAttribute("aria-disabled", "true"); chips.append(unavailable); }
+    else { const button = text("button", localeName(locale), "edition-chip"); button.type = "button"; button.setAttribute("aria-current", String(edition.id === book.id)); button.addEventListener("click", () => openBook(edition)); chips.append(button); }
+  }
+  section.append(chips); destination.push(section);
 }
 
 async function openChapter(book, node, destination) {
+  activePositionKey = null;
   destination.replaceChildren(text("p", "Memuat bab…", "status"));
   try {
     const contentUrl = safeUrl(node.content.path, catalogUrl);
@@ -164,12 +371,54 @@ async function openChapter(book, node, destination) {
     if (bytes.byteLength !== node.content.bytes || bytes.byteLength > 2 * 1024 * 1024) throw new Error("Ukuran bab tidak sesuai manifest.");
     const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map(value => value.toString(16).padStart(2, "0")).join("");
     if (digest !== node.content.sha256) throw new Error("Checksum bab tidak cocok.");
+    storageSet(`last:${book.workId}:${book.locale}`, node.id);
     const section = document.createElement("article"); section.className = "chapter";
     const bar = document.createElement("div"); bar.className = "chapter-heading"; const back = text("button", "← Daftar isi"); back.type = "button"; back.addEventListener("click", () => openBook(book)); bar.append(back, text("h2", node.title));
-    const body = document.createElement("div"); body.className = "chapter-body"; renderMarkdown(new TextDecoder().decode(bytes), body); section.append(bar, body); destination.replaceChildren(section); section.scrollIntoView({ behavior: "smooth", block: "start" });
-  } catch (error) { destination.replaceChildren(text("p", error.message || "Bab belum dapat dimuat.", "error")); }
+    const body = document.createElement("div"); body.className = "chapter-body"; renderMarkdown(new TextDecoder().decode(bytes), body);
+    const end = document.createElement("div"); end.className = "reading-end"; end.setAttribute("aria-label", "Akhir bab"); body.append(end);
+    section.append(bar, body); destination.replaceChildren(section);
+    activePositionKey = `position:${book.workId}:${book.locale}:${node.id}`;
+    const savedY = Number(storageGet(activePositionKey));
+    requestAnimationFrame(() => {
+      if (Number.isFinite(savedY) && savedY > 0) window.scrollTo({ top: savedY, behavior: "instant" });
+      else section.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    let readTimer = null;
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) {
+        clearTimeout(readTimer);
+        readTimer = setTimeout(() => {
+          const rect = end.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom >= 0) {
+            storageSet(`read:${book.workId}:${book.locale}:${node.id}`, "true");
+            observer.disconnect();
+          }
+        }, 1_000);
+      } else clearTimeout(readTimer);
+    });
+    observer.observe(end);
+  } catch (error) {
+    const message = text("p", error.message || "Bab belum dapat dimuat.", "error");
+    const retry = text("button", "Coba lagi", "retry"); retry.type = "button"; retry.addEventListener("click", () => openChapter(book, node, destination));
+    destination.replaceChildren(message, retry);
+  }
+}
+
+function openRequestedBook() {
+  const params = new URLSearchParams(location.search);
+  const workId = params.get("work");
+  if (!workId) return;
+  const locale = params.get("locale") || document.documentElement.lang || "id";
+  const book = books.find(item => item.workId === workId && item.locale.toLowerCase() === locale.toLowerCase());
+  if (!book) { status.textContent = `Edisi ${localeName(locale)} untuk buku ini belum tersedia.`; return; }
+  const rawChapter = params.get("chapter");
+  const chapterId = rawChapter ? (/^chapter-\d{1,3}$/.test(rawChapter) ? rawChapter : `chapter-${String(Number(rawChapter)).padStart(2, "0")}`) : null;
+  openBook(book, chapterId ? { chapterId } : {});
 }
 
 search.addEventListener("input", renderList);
+languageFilter.addEventListener("change", renderList);
+themeFilter.addEventListener("change", renderList);
+collectionFilter.addEventListener("change", renderList);
 document.querySelector("#refresh").addEventListener("click", loadCatalog);
 loadCatalog();

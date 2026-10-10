@@ -23,6 +23,11 @@
         </div>
         <label class="search-label" for="search">Cari buku</label>
         <input id="search" type="search" placeholder="Judul atau penulis" autocomplete="off" />
+        <div class="catalog-filters" aria-label="Filter katalog">
+          <label><span>Bahasa</span><select id="language-filter"><option value="">Semua bahasa</option><option value="id">Indonesia</option><option value="en">English</option></select></label>
+          <label><span>Tema</span><select id="theme-filter"><option value="">Semua tema</option></select></label>
+          <label><span>Koleksi</span><select id="collection-filter"><option value="">Semua koleksi</option></select></label>
+        </div>
         <p id="status" class="status" role="status" aria-live="polite">Memuat katalog…</p>
         <ul id="book-list" class="book-list"></ul>
       </aside>
