@@ -7,6 +7,7 @@ const search = document.querySelector("#search");
 const languageFilter = document.querySelector("#language-filter");
 const themeFilter = document.querySelector("#theme-filter");
 const collectionFilter = document.querySelector("#collection-filter");
+const seriesFilter = document.querySelector("#series-filter");
 let books = [];
 let taxonomyLabels = new Map();
 let activePositionKey = null;
@@ -79,6 +80,11 @@ function collectionName(id) {
   return labels[id] || id.replace(/-/g, " ").replace(/\b\w/g, char => char.toUpperCase());
 }
 
+function seriesName(id) {
+  const officialLabel = taxonomyLabels.get(`series:${id}`)?.[uiLocale];
+  return officialLabel || id.replace(/[-:]/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+}
+
 function audienceName(id) {
   return taxonomyLabels.get(`audience:${id}`)?.[uiLocale] || ({ teens: "Remaja", "young-adults": "Pemuda dewasa", adults: "Dewasa", children: "Anak-anak", all: "Semua pembaca", "teachers-parents": "Pengajar dan orang tua" }[id] || id);
 }
@@ -91,23 +97,33 @@ function storageSet(key, value) {
   try { localStorage.setItem(`sabatku-library:${key}`, value); } catch { /* private browsing may disable storage */ }
 }
 
-window.addEventListener("scroll", () => {
-  if (!activePositionKey) return;
+function flushReadingPosition() {
   clearTimeout(positionSaveTimer);
-  positionSaveTimer = setTimeout(() => storageSet(activePositionKey, String(window.scrollY)), 650);
+  if (activePositionKey) storageSet(activePositionKey, String(window.scrollY));
+  positionSaveTimer = null;
+}
+
+window.addEventListener("scroll", () => {
+  const key = activePositionKey;
+  if (!key) return;
+  clearTimeout(positionSaveTimer);
+  positionSaveTimer = setTimeout(() => storageSet(key, String(window.scrollY)), 650);
 }, { passive: true });
+window.addEventListener("pagehide", flushReadingPosition);
 
 function editionStatus(book) {
   return book.contentMode === "external-link" ? "Online · penyedia resmi" : "Online · SabatKu";
 }
 
 function populateFilters() {
-  const preserve = [languageFilter.value, themeFilter.value, collectionFilter.value];
+  const preserve = [languageFilter.value, themeFilter.value, collectionFilter.value, seriesFilter.value];
   const themes = [...new Set(books.flatMap(book => book.themeIds || []))].sort();
   const collections = [...new Set(books.flatMap(book => book.collectionIds || []))].sort();
+  const series = [...new Set(books.flatMap(book => book.seriesIds || []))].sort();
   themeFilter.replaceChildren(new Option("Semua tema", ""), ...themes.map(id => new Option(themeName(id), id)));
   collectionFilter.replaceChildren(new Option("Semua koleksi", ""), ...collections.map(id => new Option(collectionName(id), id)));
-  [languageFilter, themeFilter, collectionFilter].forEach((select, index) => {
+  seriesFilter.replaceChildren(new Option("Semua seri", ""), ...series.map(id => new Option(seriesName(id), id)));
+  [languageFilter, themeFilter, collectionFilter, seriesFilter].forEach((select, index) => {
     if ([...select.options].some(option => option.value === preserve[index])) select.value = preserve[index];
   });
 }
@@ -116,10 +132,17 @@ function renderList() {
   list.replaceChildren();
   const query = search.value.trim().toLocaleLowerCase();
   const groups = workGroups().filter(group => {
-    const allText = group.flatMap(book => [book.title, book.author, ...(book.themeIds || []), ...(book.collectionIds || []), ...(book.audienceIds || [])]).join(" ").toLocaleLowerCase();
+    const allText = group.flatMap(book => [
+      book.title, book.author,
+      ...(book.themeIds || []).flatMap(id => [id, themeName(id)]),
+      ...(book.collectionIds || []).flatMap(id => [id, collectionName(id)]),
+      ...(book.audienceIds || []).flatMap(id => [id, audienceName(id)]),
+      ...(book.seriesIds || []).flatMap(id => [id, seriesName(id)]),
+    ]).join(" ").toLocaleLowerCase();
     return (!languageFilter.value || group.some(book => book.locale === languageFilter.value))
       && (!themeFilter.value || group.some(book => book.themeIds?.includes(themeFilter.value)))
       && (!collectionFilter.value || group.some(book => book.collectionIds?.includes(collectionFilter.value)))
+      && (!seriesFilter.value || group.some(book => book.seriesIds?.includes(seriesFilter.value)))
       && allText.includes(query);
   }).sort((a, b) => preferredEdition(a).title.localeCompare(preferredEdition(b).title, "id", { sensitivity: "base" }));
 
@@ -263,12 +286,14 @@ function addClassification(container, book) {
   const groups = [
     ["Tema", (book.themeIds || []).map(themeName)],
     ["Koleksi", (book.collectionIds || []).map(collectionName)],
+    ["Seri", (book.seriesIds || []).map(seriesName)],
     ["Untuk", (book.audienceIds || []).map(audienceName)],
   ].filter(([, values]) => values.length);
   for (const [label, values] of groups) container.append(text("p", `${label}: ${values.join(" · ")}`, "edition-note"));
 }
 
 async function openBook(book, options = {}) {
+  flushReadingPosition();
   activePositionKey = null;
   if (book.contentMode === "external-link") {
     const heading = text("h2", book.title);
@@ -361,6 +386,7 @@ function addEditionChoicesTo(destination, book) {
 }
 
 async function openChapter(book, node, destination) {
+  flushReadingPosition();
   activePositionKey = null;
   destination.replaceChildren(text("p", "Memuat bab…", "status"));
   try {
@@ -420,5 +446,6 @@ search.addEventListener("input", renderList);
 languageFilter.addEventListener("change", renderList);
 themeFilter.addEventListener("change", renderList);
 collectionFilter.addEventListener("change", renderList);
+seriesFilter.addEventListener("change", renderList);
 document.querySelector("#refresh").addEventListener("click", loadCatalog);
 loadCatalog();
