@@ -293,6 +293,7 @@ function addClassification(container, book) {
 }
 
 async function openBook(book, options = {}) {
+  showReader();
   flushReadingPosition();
   activePositionKey = null;
   if (book.contentMode === "external-link") {
@@ -386,6 +387,7 @@ function addEditionChoicesTo(destination, book) {
 }
 
 async function openChapter(book, node, destination) {
+  showReader();
   flushReadingPosition();
   activePositionKey = null;
   destination.replaceChildren(text("p", "Memuat bab…", "status"));
@@ -449,3 +451,14 @@ collectionFilter.addEventListener("change", renderList);
 seriesFilter.addEventListener("change", renderList);
 document.querySelector("#refresh").addEventListener("click", loadCatalog);
 loadCatalog();
+
+const mobileReaderToolbar = document.querySelector('.mobile-reader-toolbar');
+mobileReaderToolbar.hidden = false;
+function showReader() { document.body.classList.add('reading-active'); }
+document.querySelector('#show-catalog').addEventListener('click', () => {
+  flushReadingPosition();
+  activePositionKey = null;
+  document.body.classList.remove('reading-active');
+  document.querySelector('.catalog-panel').scrollIntoView({ block: 'start' });
+  search.focus({ preventScroll: true });
+});

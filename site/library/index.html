@@ -11,6 +11,7 @@
     <script src="library.js" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#search">Lewati ke pencarian</a>
     <header class="library-header">
       <a href="../" class="brand"><img src="../assets/sabatku-logo-dark.png" alt="SabatKu" /></a>
       <a href="../" class="back-link">← Beranda SabatKu</a>
@@ -32,7 +33,8 @@
         <p id="status" class="status" role="status" aria-live="polite">Memuat katalog…</p>
         <ul id="book-list" class="book-list"></ul>
       </aside>
-      <section id="reader" class="reader-panel" aria-live="polite">
+      <div class="mobile-reader-toolbar" hidden><button id="show-catalog" type="button">← Katalog buku</button><span>Mode membaca</span></div>
+      <section id="reader" tabindex="-1" class="reader-panel" aria-live="polite">
         <div class="welcome"><span aria-hidden="true">📚</span><h2>Pilih buku untuk mulai membaca</h2><p>Buku diterbitkan satu kali dan dapat dibaca di Web maupun Android.</p></div>
       </section>
     </main>

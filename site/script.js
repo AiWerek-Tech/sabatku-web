@@ -1,5 +1,28 @@
 const donationText = 'Bantu SabatKu hadir di Google Play Store. Kami menggalang dana untuk biaya pendaftaran satu kali akun pengembang Google Play agar aplikasi SabatKu bisa diterbitkan dan lebih mudah dicari serta diunduh. Biayanya US$25 (sekitar Rp447.000, perkiraan kurs acuan 9 Oktober 2026). Donasi sukarela melalui OVO/GoPay: 082190822641 (FRENGKY LOKOBAL).';
 const numberToCopy = '082190822641';
+const menuToggle = document.querySelector('.menu-toggle');
+const navigation = document.querySelector('#main-navigation');
+menuToggle.hidden = false;
+document.documentElement.classList.add('js-enabled');
+function closeMenu() {
+  menuToggle.setAttribute('aria-expanded', 'false');
+}
+menuToggle.addEventListener('click', () => {
+  menuToggle.setAttribute('aria-expanded', String(menuToggle.getAttribute('aria-expanded') !== 'true'));
+});
+navigation.addEventListener('click', event => {
+  if (event.target.closest('a')) closeMenu();
+});
+document.addEventListener('click', event => {
+  if (!event.target.closest('.topbar')) closeMenu();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') {
+    closeMenu();
+    menuToggle.focus();
+  }
+});
+window.matchMedia('(min-width: 1024px)').addEventListener('change', closeMenu);
 const feedback = document.querySelector('#copy-feedback');
 let feedbackTimer;
 
