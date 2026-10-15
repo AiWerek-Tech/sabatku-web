@@ -26,6 +26,7 @@
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" hidden>Menu <span aria-hidden="true">☰</span></button>
       <nav id="main-navigation" aria-label="Navigasi utama">
         <a href="#fitur">Fitur</a>
+        <a href="#mulai">Cara mulai</a>
         <a href="#pembaruan">Pembaruan</a>
         <a href="#cuplikan">Tampilan aplikasi</a>
         <a href="#unduh">Unduh APK</a>
@@ -36,12 +37,12 @@
     <main id="beranda">
       <section class="hero section-wrap">
         <div class="hero-copy">
-          <p class="eyebrow"><span class="eyebrow-dot"></span> Teman bertumbuh setiap hari</p>
+          <p class="eyebrow"><span class="eyebrow-dot"></span> BACA. RENUNGKAN. BERTUMBUH.</p>
           <h1>Firman Tuhan,<br /><span>selalu dekat.</span></h1>
-          <p class="hero-lede">Pelajaran Sekolah Sabat, Alkitab, renungan harian, dan bacaan gereja dalam satu aplikasi Android. Belajar, simpan catatan, dan lanjutkan bacaan yang sudah diunduh meski tanpa internet.</p>
+          <p class="hero-lede">Satu ruang untuk belajar Sekolah Sabat, membaca Alkitab, dan menyiapkan pelayanan. Simpan bacaan, tulis refleksi, lalu lanjutkan perjalanan iman Anda—bahkan saat sedang offline.</p>
           <div class="hero-actions">
             <a class="button button-gold" id="unduh" href="https://github.com/AiWerek-Tech/sabatku-web/releases/download/v0.1.0-beta12/SabatKu-0.1.0-beta12-debug.apk" aria-label="Unduh APK beta SabatKu versi 0.1.0-beta12">Unduh APK Beta <span aria-hidden="true">↓</span></a>
-            <a class="button button-quiet" href="#fitur">Jelajahi SabatKu <span aria-hidden="true">↓</span></a>
+            <a class="button button-quiet" href="#fitur">Lihat fitur aplikasi <span aria-hidden="true">↓</span></a>
           </div>
           <p class="release-note"><span class="status-pip"></span> Beta untuk tester · versi 0.1.0-beta12 · Android 8.0 ke atas</p>
           <p class="apk-install-note">Pasang APK beta dari situs ini untuk ikut mencoba SabatKu. Aplikasi sedang disiapkan untuk Google Play Store; versi beta masih terus disempurnakan.</p>
@@ -58,6 +59,14 @@
         </div>
       </section>
 
+      <section class="daily-path section-wrap" aria-labelledby="daily-title">
+        <div class="section-heading"><p class="eyebrow eyebrow-dark">DEKAT DENGAN KESEHARIAN ANDA</p><h2 id="daily-title">Satu aplikasi.<br /><span>Banyak kesempatan bertumbuh.</span></h2><p>Dari waktu teduh pagi hingga persiapan Sabat, mulai dari bacaan yang Anda butuhkan.</p></div>
+        <div class="path-grid">
+          <article><span class="path-label">01 / SETIAP HARI</span><h3>Bangun ritme membaca</h3><p>Buka Renungan dan Bacaan Alkitab Se-Dunia satu Pasal Sehari. Pilih tanggal untuk melihat bacaan sebelumnya atau mempersiapkan hari mendatang.</p><a href="#fitur">Temukan bacaan Anda <span aria-hidden="true">↗</span></a></article>
+          <article><span class="path-label">02 / SAAT BELAJAR</span><h3>Lebih dari sekadar membaca</h3><p>Pelajari materi sesuai kelas, buka rujukan Alkitab, dan simpan jawaban atau catatan pribadi untuk diskusi Sekolah Sabat.</p><a href="#fitur">Jelajahi alat belajar <span aria-hidden="true">↗</span></a></article>
+          <article><span class="path-label">03 / MENJELANG SABAT</span><h3>Siapkan diri dan pelayanan</h3><p>Temukan bacaan misi dan persembahan untuk Sabat mendatang, lihat agenda gereja, lalu atur pengingat Sabat sesuai lokasi.</p><a href="#fitur">Kenali fitur pelayanan <span aria-hidden="true">↗</span></a></article>
+        </div>
+      </section>
       <section class="trust-strip" aria-label="Ringkasan SabatKu">
         <div class="trust-inner"><span>UNTUK KEHIDUPAN SEHARI-HARI</span><span class="trust-line"></span><span>DIRANCANG UNTUK BELAJAR</span><span class="trust-line"></span><span>MENEMANI PERJALANAN IMAN</span></div>
       </section>
@@ -68,75 +77,76 @@
           <h2 id="features-title">Belajar, membaca,<br /><span>dan bertumbuh setiap hari.</span></h2>
           <p>Dari belajar pribadi hingga persiapan Sekolah Sabat dan pelayanan jemaat, temukan bacaan serta alat yang membantu Anda dalam satu aplikasi Android.</p>
         </div>
+        <div class="feature-filter" role="group" aria-label="Tampilkan kategori fitur" hidden><button type="button" data-filter="all" aria-pressed="true">Semua fitur</button><button type="button" data-filter="belajar" aria-pressed="false">Sekolah Sabat</button><button type="button" data-filter="baca" aria-pressed="false">Bacaan &amp; Alkitab</button><button type="button" data-filter="harian" aria-pressed="false">Keseharian &amp; pelayanan</button></div>
         <div class="feature-grid feature-grid-detailed">
-          <article class="feature-card">
+          <article class="feature-card" data-category="baca">
             <div class="feature-top"><span class="feature-number">01</span><span class="feature-icon" aria-hidden="true">✧</span></div>
             <h3>Alkitab TB & KJV, dekat setiap saat</h3>
             <p>Bawa 66 kitab Alkitab dalam bahasa Indonesia dan Inggris untuk membaca serta mendalami Firman di mana saja.</p>
             <ul class="feature-details"><li>Baca Terjemahan Baru (TB) dan King James Version (KJV) secara offline.</li><li>Pindah kitab dan pasal, cari kata atau ayat, serta buka rujukan Alkitab dari bacaan.</li><li>Simpan penanda, sorotan, dan catatan ayat; salin atau bagikan ayat yang bermakna.</li></ul>
             <div class="tag-row"><span>TB</span><span>KJV</span><span>Offline</span></div>
           </article>
-          <article class="feature-card">
+          <article class="feature-card" data-category="belajar">
             <div class="feature-top"><span class="feature-number">02</span><span class="feature-icon" aria-hidden="true">⌘</span></div>
             <h3>Sekolah Sabat untuk berbagai usia</h3>
             <p>Ikuti pelajaran harian dengan pilihan program untuk dewasa, pemuda, dan anak sesuai edisi yang tersedia.</p>
-            <ul class="feature-details"><li>Jelajahi program Indonesia dan Inggris, termasuk Dewasa Standar, Easy Reading, InVerse, dan Cornerstone.</li><li>Simpan materi untuk dibaca offline dan lanjutkan belajar dengan progres, penanda, serta catatan jawaban.</li><li>Baca teks di aplikasi atau gunakan PDF pelajaran yang tersedia.</li></ul>
+            <ul class="feature-details"><li>Jelajahi program Indonesia dan Inggris, termasuk Dewasa Standar, Easy Reading, InVerse, Cornerstone, Real-Time Faith, dan PowerPoints sesuai ketersediaan edisi.</li><li>Simpan materi untuk dibaca offline dan lanjutkan belajar dengan progres, penanda, serta catatan jawaban.</li><li>Baca teks di aplikasi atau gunakan PDF pelajaran yang tersedia.</li></ul>
             <div class="tag-row"><span>Bacaan harian</span><span>Indonesia & Inggris</span></div>
           </article>
-          <article class="feature-card">
+          <article class="feature-card" data-category="belajar">
             <div class="feature-top"><span class="feature-number">03</span><span class="feature-icon" aria-hidden="true">✎</span></div>
             <h3>Materi pendamping untuk belajar lebih dalam</h3>
             <p>Siapkan diskusi dan pengajaran dengan bacaan tambahan yang terhubung ke pelajaran.</p>
             <ul class="feature-details"><li>Akses Penuntun Guru, Outline Hope Sabbath School, Inside Story, Talking Points, dan EGW Notes bila tersedia.</li><li>Pada Cornerstone, buka Penuntun Guru mingguan yang sesuai dengan pelajaran siswa.</li><li>Simpan materi pendamping bersama pelajaran untuk membantu persiapan saat offline.</li></ul>
             <div class="tag-row"><span>Penuntun Guru</span><span>Bacaan tambahan</span></div>
           </article>
-          <article class="feature-card">
+          <article class="feature-card" data-category="belajar">
             <div class="feature-top"><span class="feature-number">04</span><span class="feature-icon" aria-hidden="true">↗</span></div>
-            <h3>Cornerstone yang mengajak berpartisipasi</h3>
-            <p>Belajar sambil menulis refleksi dan menyimpan jawaban untuk ditinjau kembali.</p>
-            <ul class="feature-details"><li>Cari kata atau ayat di seluruh 13 pelajaran dalam edisi Cornerstone.</li><li>Simpan jawaban dan pilihan kegiatan langsung dari bacaan.</li><li>Salin, bagikan, atau simpan ringkasan jawaban mingguan.</li></ul>
+            <h3>Belajar aktif, dari refleksi hingga aktivitas</h3>
+            <p>Cornerstone dan Real-Time Faith menghadirkan kegiatan belajar yang bisa Anda kerjakan langsung di aplikasi.</p>
+            <ul class="feature-details"><li>Kerjakan aktivitas Real-Time Faith seperti isian, pilihan, pasangan, cari kata, dan labirin sesuai pelajaran.</li><li>Simpan jawaban dan pilihan kegiatan langsung dari bacaan.</li><li>Salin, bagikan, atau simpan ringkasan jawaban mingguan.</li></ul>
             <div class="tag-row"><span>Refleksi</span><span>Jawaban mingguan</span></div>
           </article>
-          <article class="feature-card">
+          <article class="feature-card" data-category="baca">
             <div class="feature-top"><span class="feature-number">05</span><span class="feature-icon" aria-hidden="true">☀</span></div>
             <h3>Renungan harian dengan ruang untuk fokus</h3>
             <p>Bangun kebiasaan membaca setiap hari dengan tampilan yang dapat disesuaikan.</p>
             <ul class="feature-details"><li>Baca renungan yang tersimpan secara offline; gunakan mode fokus dan pilihan font, termasuk Advent Sans.</li><li>Sorot dan beri catatan per paragraf; lanjutkan dari posisi baca yang tersimpan.</li><li>Cari berdasarkan tanggal atau isi, lihat progres, lalu salin atau bagikan bacaan.</li></ul>
             <div class="tag-row"><span>Mode fokus</span><span>Catatan</span><span>Progres</span></div>
           </article>
-          <article class="feature-card">
+          <article class="feature-card" data-category="harian">
             <div class="feature-top"><span class="feature-number">06</span><span class="feature-icon" aria-hidden="true">☼</span></div>
             <h3>Sambut Sabat sesuai lokasi Anda</h3>
             <p>Lihat waktu mulai dan berakhirnya Sabat berdasarkan lokasi yang dipilih.</p>
             <ul class="feature-details"><li>Ikuti waktu matahari terbenam setempat, hitung mundur, dan rujukan waktu BMKG.</li><li>Atur pengingat Sabat dan Doa 777, serta pilihan lagu Sabat offline yang dapat dimatikan.</li><li>Bagikan kartu Sabat dan baca ayat renungan untuk menyambut hari Sabat.</li></ul>
             <div class="tag-row"><span>Waktu setempat</span><span>Pengingat</span></div>
           </article>
-          <article class="feature-card">
+          <article class="feature-card" data-category="baca">
             <div class="feature-top"><span class="feature-number">07</span><span class="feature-icon" aria-hidden="true">▤</span></div>
             <h3>Buku digital & Peraturan Jemaat</h3>
             <p>Temukan bacaan untuk pertumbuhan pribadi dan kebutuhan pelayanan di dalam aplikasi.</p>
-            <ul class="feature-details"><li>Jelajahi koleksi serta edisi bahasa, buka daftar isi, dan baca per bab.</li><li>Lanjutkan bacaan melalui navigasi bab dan pengelolaan unduhan.</li><li>Peraturan Jemaat bahasa Indonesia dan Inggris tersedia offline; buku lain mengikuti ketersediaan dan izin tiap edisi.</li></ul>
+            <ul class="feature-details"><li>Jelajahi koleksi serta edisi bahasa, buka daftar isi, dan baca per bab.</li><li>Gunakan Lanjutkan membaca untuk kembali ke posisi terakhir; Bacaan Sabat ini membantu menemukan bacaan berkala sesuai jadwal.</li><li>Peraturan Jemaat bahasa Indonesia dan Inggris tersedia offline; buku lain mengikuti ketersediaan dan izin tiap edisi.</li></ul>
             <div class="tag-row"><span>Buku digital</span><span>Peraturan Jemaat</span></div>
           </article>
-          <article class="feature-card">
+          <article class="feature-card" data-category="harian">
             <div class="feature-top"><span class="feature-number">08</span><span class="feature-icon" aria-hidden="true">◷</span></div>
             <h3>Hari Ini: bacaan sesuai jadwal</h3>
             <p>Mulai dari satu halaman untuk menemukan bacaan yang relevan dengan hari Anda.</p>
             <ul class="feature-details"><li>Akses Renungan, Sekolah Sabat, Berita Misi, dan Bacaan Persembahan dari dasbor Hari Ini.</li><li>Bacaan mengikuti tanggal dan edisi yang tersedia, dilengkapi status selesai.</li><li>Temukan bahan untuk belajar pribadi maupun persiapan kegiatan jemaat.</li></ul>
             <div class="tag-row"><span>Renungan</span><span>Misi</span><span>Persembahan</span></div>
           </article>
-          <article class="feature-card">
+          <article class="feature-card" data-category="harian">
             <div class="feature-top"><span class="feature-number">09</span><span class="feature-icon" aria-hidden="true">▦</span></div>
             <h3>Kalender gereja 2026</h3>
             <p>Lihat agenda gereja dan persiapkan kegiatan dengan informasi yang mudah ditemukan.</p>
             <ul class="feature-details"><li>Kalender menggunakan urutan Minggu–Sabat, dengan penanda Sabat berwarna merah.</li><li>Cari atau filter kegiatan untuk menemukan agenda yang dibutuhkan.</li><li>Buka deskripsi, sasaran peserta, sumber resmi, serta gambar dan materi jika tersedia.</li></ul>
             <div class="tag-row"><span>Agenda</span><span>Pencarian</span><span>Detail kegiatan</span></div>
           </article>
-          <article class="feature-card">
+          <article class="feature-card" data-category="harian">
             <div class="feature-top"><span class="feature-number">10</span><span class="feature-icon" aria-hidden="true">↓</span></div>
             <h3>Unduhan & pembaruan lebih praktis</h3>
             <p>Siapkan bacaan sebelum bepergian dan ikuti perkembangan versi beta dari aplikasi.</p>
-            <ul class="feature-details"><li>Lihat status unduhan, batalkan bila perlu, atau batasi unduhan baru ke Wi-Fi.</li><li>Materi yang sudah tersimpan tetap dapat digunakan jika penyegaran konten gagal.</li><li>Terima informasi rilis beta di Notifikasi dan periksa pembaruan melalui Pengaturan.</li></ul>
+            <ul class="feature-details"><li>Lihat status unduhan, batalkan bila perlu, atau batasi unduhan baru ke Wi-Fi.</li><li>Perbarui edisi Sekolah Sabat secara bertahap: pelajaran yang tidak berubah tetap tersimpan, sementara bagian yang berubah diperbarui.</li><li>Dapatkan pemberitahuan pembaruan materi dan aplikasi. Popup dalam aplikasi serta notifikasi HP membantu Anda mengikuti pembaruan; notifikasi mengikuti izin Android.</li></ul>
             <div class="tag-row"><span>Kelola unduhan</span><span>Pembaruan beta</span></div>
           </article>
         </div>
@@ -269,6 +279,21 @@
         </div>
       </section>
 
+      <section class="start-section section-wrap" id="mulai" aria-labelledby="start-title">
+        <div class="section-heading"><p class="eyebrow eyebrow-dark">MULAI DALAM BEBERAPA LANGKAH</p><h2 id="start-title">Ruang belajar Anda,<br /><span>siap dibawa ke mana saja.</span></h2><p>SabatKu beta12 tersedia untuk Android 8.0 ke atas. Ukuran APK sekitar 45 MB; unduhan materi menggunakan ruang tambahan.</p></div>
+        <ol class="start-steps"><li><span>1</span><div><h3>Unduh &amp; pasang APK</h3><p>Unduh dari tombol resmi di halaman ini. Saat diminta Android, izinkan pemasangan dari aplikasi yang Anda gunakan untuk membuka APK.</p></div></li><li><span>2</span><div><h3>Sesuaikan ruang belajar</h3><p>Atur bahasa dan profil belajar Anda, lalu pilih kelas Sekolah Sabat serta bacaan yang ingin diikuti.</p></div></li><li><span>3</span><div><h3>Simpan sebelum bepergian</h3><p>Unduh materi saat terhubung internet. Buka kembali bacaan yang tersimpan kapan pun Anda membutuhkannya.</p></div></li></ol>
+        <a class="button button-navy" href="https://github.com/AiWerek-Tech/sabatku-web/releases/download/v0.1.0-beta12/SabatKu-0.1.0-beta12-debug.apk">Unduh SabatKu beta12 <span aria-hidden="true">↓</span></a>
+      </section>
+      <section class="faq-section section-wrap" id="pertanyaan" aria-labelledby="faq-title">
+        <div class="section-heading"><p class="eyebrow eyebrow-dark">SEBELUM ANDA MULAI</p><h2 id="faq-title">Yang sering ditanyakan.</h2></div>
+        <div class="faq-list">
+          <details><summary>Apakah SabatKu bisa digunakan tanpa internet?</summary><p>Alkitab TB dan KJV tersedia offline. Pelajaran, renungan, dan buku yang mendukung penyimpanan offline perlu diunduh terlebih dahulu. Internet tetap diperlukan untuk katalog, materi baru, sinkronisasi, dan pembaruan.</p></details>
+          <details><summary>Apakah semua kelas dan bahasa sudah tersedia?</summary><p>Ketersediaan mengikuti program, bahasa, triwulan, dan sumber penerbit. Pilih edisi yang tersedia di aplikasi; PDF dan materi pendamping dapat berbeda pada setiap edisi.</p></details>
+          <details><summary>Bagaimana memperbarui versi beta?</summary><p>Ikuti pemberitahuan pembaruan di aplikasi atau buka Pengaturan untuk memeriksa versi. Anda juga dapat mengunduh APK terbaru dari situs ini dan memasangnya di atas beta sebelumnya tanpa menghapus aplikasi.</p></details>
+          <details><summary>Mengapa pengingat belum muncul di HP saya?</summary><p>Periksa izin notifikasi, izin alarm, dan pengaturan baterai untuk SabatKu. Android dapat menunda pekerjaan latar belakang saat hemat daya aktif; popup pembaruan juga tersedia saat aplikasi dibuka.</p></details>
+          <details><summary>Di mana saya bisa melaporkan masalah versi beta?</summary><p>Catat versi aplikasi, model HP, versi Android, serta langkah yang memunculkan masalah. Sampaikan melalui <a href="https://github.com/AiWerek-Tech/sabatku-android/issues">halaman laporan SabatKu di GitHub</a> agar temuan bisa ditelusuri.</p></details>
+        </div>
+      </section>
       <section class="promise section-wrap">
         <div class="promise-mark">✳</div>
         <div><p class="eyebrow eyebrow-dark">DIBUAT UNTUK MENEMANI</p><h2>Mulai dari satu ayat.<br /><span>Lanjutkan setiap hari.</span></h2></div>
@@ -315,5 +340,6 @@
       <div class="footer-inner"><a class="footer-brand" href="#beranda">SabatKu<span>.</span></a><span>Menemani perjalanan iman, satu hari demi satu hari.</span><a href="#pembaruan">Riwayat perubahan ↑</a></div>
       <p class="footer-note">Nama Google Play dan Google Play Store adalah merek dagang Google LLC. SabatKu bukan aplikasi resmi Google.</p>
     </footer>
+  <a class="mobile-download" href="https://github.com/AiWerek-Tech/sabatku-web/releases/download/v0.1.0-beta12/SabatKu-0.1.0-beta12-debug.apk"><span><strong>SabatKu beta12</strong><small>Android 8.0+ · 45 MB</small></span><b>Unduh APK ↓</b></a>
   </body>
 </html>

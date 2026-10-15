@@ -70,3 +70,18 @@ document.querySelector('#share-donation').addEventListener('click', async () => 
     if (error.name !== 'AbortError') showFeedback('Info donasi belum dapat dibagikan.');
   }
 });
+
+const featureFilter = document.querySelector('.feature-filter');
+if (featureFilter) {
+  featureFilter.hidden = false;
+  featureFilter.addEventListener('click', event => {
+    const button = event.target.closest('button[data-filter]');
+    if (!button) return;
+    featureFilter.querySelectorAll('button').forEach(item => {
+      item.setAttribute('aria-pressed', String(item === button));
+    });
+    document.querySelectorAll('.feature-card[data-category]').forEach(card => {
+      card.hidden = button.dataset.filter !== 'all' && card.dataset.category !== button.dataset.filter;
+    });
+  });
+}
