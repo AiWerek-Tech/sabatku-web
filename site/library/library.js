@@ -242,7 +242,13 @@ function renderMarkdown(markdown, container) {
   const flush = () => {
     if (!paragraph.length) return;
     const value = paragraph.join(" ").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1").replace(/`([^`]+)`/g, "$1");
-    container.append(text("p", value)); paragraph = [];
+    const node = text("p", "");
+    for (const part of value.split(/(\[\[EM [0-9]+(?:\.[0-9]+)?]])/g)) {
+      const reference = part.match(/^\[\[(EM [0-9]+(?:\.[0-9]+)?)]]$/);
+      if (reference) node.append(text("small", reference[1], "source-reference"));
+      else node.append(document.createTextNode(part));
+    }
+    container.append(node); paragraph = [];
   };
   for (const line of lines) {
     const heading = line.match(/^(#{1,3})\s+(.+)$/);
@@ -345,15 +351,31 @@ async function openBook(book, options = {}) {
     const progressBar = document.createElement("progress"); progressBar.max = Math.max(nodes.length, 1); progressBar.value = readCount;
     progress.append(progressBar, text("span", `${readCount} dari ${nodes.length} bab selesai`), text("span", "Posisi dan progres tersimpan di browser ini."));
     const toc = document.createElement("nav"); toc.className = "toc"; toc.setAttribute("aria-label", "Daftar isi"); toc.append(text("h3", "Daftar isi")); const ol = document.createElement("ol");
+    const childrenByParent = new Map();
     for (const node of nodes) {
-      const li = document.createElement("li");
-      const row = document.createElement("div"); row.className = "toc-row";
-      const button = text("button", node.title); button.type = "button"; button.addEventListener("click", () => openChapter(book, node, reader));
-      const saved = storageGet(`bookmark:${book.workId}:${book.locale}:${node.id}`) === "true";
-      const bookmark = text("button", saved ? "Tersimpan" : "Simpan"); bookmark.className = "bookmark-button"; bookmark.type = "button"; bookmark.setAttribute("aria-pressed", String(saved));
-      bookmark.addEventListener("click", () => { const next = storageGet(`bookmark:${book.workId}:${book.locale}:${node.id}`) !== "true"; storageSet(`bookmark:${book.workId}:${book.locale}:${node.id}`, String(next)); bookmark.textContent = next ? "Tersimpan" : "Simpan"; bookmark.setAttribute("aria-pressed", String(next)); });
-      row.append(button, bookmark); li.append(row); ol.append(li);
+      const parent = node.parentId || "";
+      if (!childrenByParent.has(parent)) childrenByParent.set(parent, []);
+      childrenByParent.get(parent).push(node);
     }
+    const appendTocChildren = (list, parentId = "") => {
+      for (const node of childrenByParent.get(parentId) || []) {
+        const li = document.createElement("li");
+        const row = document.createElement("div"); row.className = "toc-row";
+        const button = text("button", node.title); button.type = "button"; button.addEventListener("click", () => openChapter(book, node, reader));
+        const saved = storageGet(`bookmark:${book.workId}:${book.locale}:${node.id}`) === "true";
+        const bookmark = text("button", saved ? "Tersimpan" : "Simpan"); bookmark.className = "bookmark-button"; bookmark.type = "button"; bookmark.setAttribute("aria-pressed", String(saved));
+        bookmark.addEventListener("click", () => { const next = storageGet(`bookmark:${book.workId}:${book.locale}:${node.id}`) !== "true"; storageSet(`bookmark:${book.workId}:${book.locale}:${node.id}`, String(next)); bookmark.textContent = next ? "Tersimpan" : "Simpan"; bookmark.setAttribute("aria-pressed", String(next)); });
+        row.append(button, bookmark); li.append(row);
+        const children = childrenByParent.get(node.id);
+        if (children?.length) {
+          const nested = document.createElement("ol"); nested.className = "toc-children";
+          appendTocChildren(nested, node.id);
+          li.append(nested);
+        }
+        list.append(li);
+      }
+    };
+    appendTocChildren(ol);
     toc.append(ol);
     const otherEditions = books.filter(item => item.workId === book.workId && item.id !== book.id);
     const parts = [top, progress];
@@ -390,6 +412,14 @@ async function openChapter(book, node, destination) {
   showReader();
   flushReadingPosition();
   activePositionKey = null;
+  if (!node.content?.path) {
+    const section = document.createElement("article"); section.className = "chapter";
+    const bar = document.createElement("div"); bar.className = "chapter-heading"; const back = text("button", "← Daftar isi"); back.type = "button"; back.addEventListener("click", () => openBook(book)); bar.append(back, text("h2", node.title));
+    section.append(bar, text("p", "Konten buku ini masih dalam proses. Silakan kembali lagi nanti.", "chapter-pending"));
+    destination.replaceChildren(section);
+    reader.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
   destination.replaceChildren(text("p", "Memuat bab…", "status"));
   try {
     const contentUrl = safeUrl(node.content.path, catalogUrl);
