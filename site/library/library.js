@@ -12,6 +12,8 @@ let books = [];
 let taxonomyLabels = new Map();
 let activePositionKey = null;
 let positionSaveTimer = null;
+let readerRequest = 0;
+let stopReadTracking = () => {};
 const uiLocale = new URLSearchParams(location.search).get("ui") === "en" ? "en" : "id";
 
 function safeUrl(path, base) {
@@ -101,6 +103,24 @@ function flushReadingPosition() {
   clearTimeout(positionSaveTimer);
   if (activePositionKey) storageSet(activePositionKey, String(window.scrollY));
   positionSaveTimer = null;
+}
+
+function beginReaderNavigation() {
+  flushReadingPosition();
+  activePositionKey = null;
+  stopReadTracking();
+  stopReadTracking = () => {};
+  return ++readerRequest;
+}
+
+function chapterMetadata(node, locale) {
+  const parts = [];
+  if (node.readingDate) {
+    const date = new Date(`${node.readingDate}T00:00:00Z`);
+    if (Number.isFinite(date.valueOf())) parts.push(new Intl.DateTimeFormat(locale || "id", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(date));
+  }
+  if (node.country) parts.push(node.country);
+  return parts.join(" · ");
 }
 
 window.addEventListener("scroll", () => {
@@ -300,13 +320,13 @@ function addClassification(container, book) {
 
 async function openBook(book, options = {}) {
   showReader();
-  flushReadingPosition();
-  activePositionKey = null;
+  const request = beginReaderNavigation();
   if (book.contentMode === "external-link") {
     const heading = text("h2", book.title);
     const author = text("p", book.author || "Ellen G. White");
     const cover = document.createElement("img"); cover.className = "reader-cover"; cover.alt = `Sampul ${book.title}`; if (book.cover?.path) cover.src = safeUrl(book.cover.path, catalogUrl);
-    const metadata = document.createElement("div"); metadata.append(heading, author, text("p", "Edisi bahasa Inggris tersedia langsung dari penyedia resmi. Perlu internet; SabatKu tidak menyimpan salinan offline.", "edition-note"));
+    const metadata = document.createElement("div"); metadata.append(heading, author);
+    if (book.description) metadata.append(text("p", book.description, "book-summary"));
     addClassification(metadata, book);
     const top = document.createElement("div"); top.className = "reader-top"; top.append(cover, metadata);
     const contents = [top];
@@ -331,6 +351,7 @@ async function openBook(book, options = {}) {
   reader.replaceChildren(text("p", "Memuat detail buku…", "status"));
   try {
     const manifest = await getJson(book.manifestUrl);
+    if (request !== readerRequest) return;
     const edition = manifest.edition;
     if (manifest.schemaVersion !== "sabatku-library-v1" || edition?.id !== book.id || edition?.revision !== book.revision || edition?.status !== "published" || !["verified", "public-domain"].includes(edition?.rights?.status)) throw new Error("Manifest buku tidak cocok atau belum disetujui.");
     const heading = text("h2", book.title);
@@ -346,10 +367,11 @@ async function openBook(book, options = {}) {
       const requested = nodes.find(node => node.id === options.chapterId);
       if (requested) { await openChapter(book, requested, reader); return; }
     }
-    const readCount = nodes.filter(node => storageGet(`read:${book.workId}:${book.locale}:${node.id}`) === "true").length;
+    const readableNodes = nodes.filter(node => node.content?.path);
+    const readCount = readableNodes.filter(node => storageGet(`read:${book.workId}:${book.locale}:${node.id}`) === "true").length;
     const progress = document.createElement("div"); progress.className = "book-progress";
-    const progressBar = document.createElement("progress"); progressBar.max = Math.max(nodes.length, 1); progressBar.value = readCount;
-    progress.append(progressBar, text("span", `${readCount} dari ${nodes.length} bagian selesai`), text("span", "Posisi dan progres tersimpan di browser ini."));
+    const progressBar = document.createElement("progress"); progressBar.max = Math.max(readableNodes.length, 1); progressBar.value = readCount;
+    progress.append(progressBar, text("span", `${readCount} dari ${readableNodes.length} bagian selesai`), text("span", "Posisi dan progres tersimpan di browser ini."));
     const toc = document.createElement("nav"); toc.className = "toc"; toc.setAttribute("aria-label", "Daftar isi"); toc.append(text("h3", "Daftar isi")); const ol = document.createElement("ol");
     const childrenByParent = new Map();
     for (const node of nodes) {
@@ -361,16 +383,38 @@ async function openBook(book, options = {}) {
       for (const node of childrenByParent.get(parentId) || []) {
         const li = document.createElement("li");
         const row = document.createElement("div"); row.className = "toc-row";
-        const button = text("button", node.title); button.type = "button"; button.addEventListener("click", () => openChapter(book, node, reader));
+        let toggleChildren = () => {};
+        const button = text("button", node.title, "toc-title"); button.type = "button";
+        const metadata = chapterMetadata(node, book.locale);
+        if (metadata) button.append(text("span", metadata, "toc-metadata"));
+        button.addEventListener("click", () => {
+          if (!node.content?.path && childrenByParent.get(node.id)?.length) {
+            toggleChildren();
+          } else openChapter(book, node, reader);
+        });
         const saved = storageGet(`bookmark:${book.workId}:${book.locale}:${node.id}`) === "true";
         const bookmark = text("button", saved ? "Tersimpan" : "Simpan"); bookmark.className = "bookmark-button"; bookmark.type = "button"; bookmark.setAttribute("aria-pressed", String(saved));
         bookmark.addEventListener("click", () => { const next = storageGet(`bookmark:${book.workId}:${book.locale}:${node.id}`) !== "true"; storageSet(`bookmark:${book.workId}:${book.locale}:${node.id}`, String(next)); bookmark.textContent = next ? "Tersimpan" : "Simpan"; bookmark.setAttribute("aria-pressed", String(next)); });
-        row.append(button, bookmark); li.append(row);
+        row.append(button); if (node.content?.path) row.append(bookmark); li.append(row);
         const children = childrenByParent.get(node.id);
         if (children?.length) {
           const nested = document.createElement("ol"); nested.className = "toc-children";
+          nested.hidden = true;
+          nested.id = `toc-${encodeURIComponent(node.id)}`;
           appendTocChildren(nested, node.id);
           li.append(nested);
+          const expand = text("button", "Buka", "toc-expand"); expand.type = "button";
+          expand.setAttribute("aria-label", `Buka subbagian ${node.title}`);
+          expand.setAttribute("aria-controls", nested.id);
+          expand.setAttribute("aria-expanded", "false");
+          toggleChildren = () => {
+            nested.hidden = !nested.hidden;
+            expand.textContent = nested.hidden ? "Buka" : "Tutup";
+            expand.setAttribute("aria-expanded", String(!nested.hidden));
+            expand.setAttribute("aria-label", `${nested.hidden ? "Buka" : "Tutup"} subbagian ${node.title}`);
+          };
+          expand.addEventListener("click", toggleChildren);
+          row.insertBefore(expand, row.firstChild);
         }
         list.append(li);
       }
@@ -388,6 +432,7 @@ async function openBook(book, options = {}) {
     parts.push(toc);
     reader.replaceChildren(...parts);
   } catch (error) {
+    if (request !== readerRequest) return;
     const message = text("p", error.message || "Detail buku belum dapat dimuat.", "error");
     const retry = text("button", "Coba lagi", "retry"); retry.type = "button"; retry.addEventListener("click", () => openBook(book, options));
     reader.replaceChildren(message, retry);
@@ -410,8 +455,7 @@ function addEditionChoicesTo(destination, book) {
 
 async function openChapter(book, node, destination) {
   showReader();
-  flushReadingPosition();
-  activePositionKey = null;
+  const request = beginReaderNavigation();
   if (!node.content?.path) {
     const section = document.createElement("article"); section.className = "chapter";
     const bar = document.createElement("div"); bar.className = "chapter-heading"; const back = text("button", "← Daftar isi"); back.type = "button"; back.addEventListener("click", () => openBook(book)); bar.append(back, text("h2", node.title));
@@ -426,18 +470,28 @@ async function openChapter(book, node, destination) {
     const response = await fetch(contentUrl, { redirect: "error" });
     if (!response.ok) throw new Error(`Bab belum dapat dimuat (HTTP ${response.status}).`);
     const bytes = new Uint8Array(await response.arrayBuffer());
+    if (request !== readerRequest) return;
     if (bytes.byteLength !== node.content.bytes || bytes.byteLength > 2 * 1024 * 1024) throw new Error("Ukuran bab tidak sesuai manifest.");
     const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map(value => value.toString(16).padStart(2, "0")).join("");
+    if (request !== readerRequest) return;
     if (digest !== node.content.sha256) throw new Error("Checksum bab tidak cocok.");
-    storageSet(`last:${book.workId}:${book.locale}`, node.id);
+    const markdown = new TextDecoder().decode(bytes);
+    const pending = markdown.trim() === "Konten buku ini masih dalam proses. Silakan kembali lagi nanti.";
+    if (!pending) storageSet(`last:${book.workId}:${book.locale}`, node.id);
     const section = document.createElement("article"); section.className = "chapter";
     const bar = document.createElement("div"); bar.className = "chapter-heading"; const back = text("button", "← Daftar isi"); back.type = "button"; back.addEventListener("click", () => openBook(book)); bar.append(back, text("h2", node.title));
-    const body = document.createElement("div"); body.className = "chapter-body"; renderMarkdown(new TextDecoder().decode(bytes), body);
+    const body = document.createElement("div"); body.className = "chapter-body"; renderMarkdown(markdown, body);
+    const firstHeading = body.firstElementChild;
+    if (firstHeading?.matches("h1,h2,h3") && firstHeading.textContent.trim() === node.title.trim()) firstHeading.remove();
     const end = document.createElement("div"); end.className = "reading-end"; end.setAttribute("aria-label", "Akhir bab"); body.append(end);
-    section.append(bar, body); destination.replaceChildren(section);
+    section.append(bar);
+    const metadata = chapterMetadata(node, book.locale);
+    if (metadata) section.append(text("p", metadata, "edition-note"));
+    section.append(body); destination.replaceChildren(section);
     activePositionKey = `position:${book.workId}:${book.locale}:${node.id}`;
     const savedY = Number(storageGet(activePositionKey));
     requestAnimationFrame(() => {
+      if (request !== readerRequest) return;
       if (Number.isFinite(savedY) && savedY > 0) window.scrollTo({ top: savedY, behavior: "instant" });
       else section.scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -447,15 +501,17 @@ async function openChapter(book, node, destination) {
         clearTimeout(readTimer);
         readTimer = setTimeout(() => {
           const rect = end.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom >= 0) {
+          if (request === readerRequest && rect.top < window.innerHeight && rect.bottom >= 0) {
             storageSet(`read:${book.workId}:${book.locale}:${node.id}`, "true");
             observer.disconnect();
           }
         }, 1_000);
       } else clearTimeout(readTimer);
     });
-    observer.observe(end);
+    if (!pending) observer.observe(end);
+    stopReadTracking = () => { clearTimeout(readTimer); observer.disconnect(); };
   } catch (error) {
+    if (request !== readerRequest) return;
     const message = text("p", error.message || "Bab belum dapat dimuat.", "error");
     const retry = text("button", "Coba lagi", "retry"); retry.type = "button"; retry.addEventListener("click", () => openChapter(book, node, destination));
     destination.replaceChildren(message, retry);
@@ -486,8 +542,7 @@ const mobileReaderToolbar = document.querySelector('.mobile-reader-toolbar');
 mobileReaderToolbar.hidden = false;
 function showReader() { document.body.classList.add('reading-active'); }
 document.querySelector('#show-catalog').addEventListener('click', () => {
-  flushReadingPosition();
-  activePositionKey = null;
+  beginReaderNavigation();
   document.body.classList.remove('reading-active');
   document.querySelector('.catalog-panel').scrollIntoView({ block: 'start' });
   search.focus({ preventScroll: true });

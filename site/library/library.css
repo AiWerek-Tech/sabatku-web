@@ -53,3 +53,8 @@ html { scroll-padding-top: 84px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
 .chapter-body .source-reference { margin-left: .28em; color: var(--muted); font-size: .68em; vertical-align: super; white-space: nowrap; }
 .toc ol { list-style: none; padding-left: 0; }
+.toc .toc-metadata { display: block; color: var(--muted); font-size: .8em; margin-top: 3px; }
+.toc button:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+.toc .toc-children { padding-left: 16px; }
+.toc-row > .toc-title { flex: 1; min-width: 0; min-height: 48px; padding: 7px 4px; line-height: 1.6; overflow-wrap: anywhere; }
+.toc-row > .toc-expand { flex: none; min-width: 44px; min-height: 48px; padding: 7px 4px; font-size: .8rem; }
