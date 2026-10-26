@@ -52,3 +52,4 @@ html { scroll-padding-top: 84px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
 .chapter-body .source-reference { margin-left: .28em; color: var(--muted); font-size: .68em; vertical-align: super; white-space: nowrap; }
+.toc ol { list-style: none; padding-left: 0; }

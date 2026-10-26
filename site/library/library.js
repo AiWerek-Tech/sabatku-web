@@ -335,10 +335,10 @@ async function openBook(book, options = {}) {
     if (manifest.schemaVersion !== "sabatku-library-v1" || edition?.id !== book.id || edition?.revision !== book.revision || edition?.status !== "published" || !["verified", "public-domain"].includes(edition?.rights?.status)) throw new Error("Manifest buku tidak cocok atau belum disetujui.");
     const heading = text("h2", book.title);
     const author = text("p", manifest.work?.author || book.author || "Penulis");
-    const attribution = text("p", edition.rights.attribution, "edition-note");
     const cover = document.createElement("img"); cover.className = "reader-cover"; cover.alt = `Sampul ${book.title}`; if (book.cover?.path) cover.src = safeUrl(book.cover.path, catalogUrl);
-    const metadata = document.createElement("div"); metadata.append(heading, author, attribution, text("p", "Online · dihosting SabatKu · belum tersedia offline", "edition-note"));
-    if (manifest.work?.summary || edition.summary) metadata.append(text("p", manifest.work?.summary || edition.summary, "book-summary"));
+    const metadata = document.createElement("div"); metadata.append(heading, author);
+    const summary = edition.description || book.description || manifest.work?.summary;
+    if (summary) metadata.append(text("p", summary, "book-summary"));
     addClassification(metadata, book);
     const top = document.createElement("div"); top.className = "reader-top"; top.append(cover, metadata);
     const nodes = [...manifest.nodes].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
@@ -349,7 +349,7 @@ async function openBook(book, options = {}) {
     const readCount = nodes.filter(node => storageGet(`read:${book.workId}:${book.locale}:${node.id}`) === "true").length;
     const progress = document.createElement("div"); progress.className = "book-progress";
     const progressBar = document.createElement("progress"); progressBar.max = Math.max(nodes.length, 1); progressBar.value = readCount;
-    progress.append(progressBar, text("span", `${readCount} dari ${nodes.length} bab selesai`), text("span", "Posisi dan progres tersimpan di browser ini."));
+    progress.append(progressBar, text("span", `${readCount} dari ${nodes.length} bagian selesai`), text("span", "Posisi dan progres tersimpan di browser ini."));
     const toc = document.createElement("nav"); toc.className = "toc"; toc.setAttribute("aria-label", "Daftar isi"); toc.append(text("h3", "Daftar isi")); const ol = document.createElement("ol");
     const childrenByParent = new Map();
     for (const node of nodes) {
