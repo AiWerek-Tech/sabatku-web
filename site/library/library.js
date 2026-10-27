@@ -14,6 +14,7 @@ let activePositionKey = null;
 let positionSaveTimer = null;
 let readerRequest = 0;
 let stopReadTracking = () => {};
+let activeChapters = [];
 const uiLocale = new URLSearchParams(location.search).get("ui") === "en" ? "en" : "id";
 
 function safeUrl(path, base) {
@@ -254,32 +255,38 @@ async function loadCatalog() {
   }
 }
 
-function renderMarkdown(markdown, container) {
+function renderMarkdown(markdown, container, locale = "id") {
   container.replaceChildren();
   const lines = markdown.replace(/\r\n/g, "\n").split("\n");
-  let paragraph = [];
-  let listNode = null;
+  let paragraph = []; let listNode = null; let tableLines = [];
+  const footnotes = Object.fromEntries(lines.map(line => line.match(/^\[\^([^]]+)]:\s*(.*)$/)).filter(Boolean).map(match => [match[1], match[2]]));
+  const inline = (tag, value) => { const node = text(tag, ""); appendBookInline(node, value, footnotes, locale); return node; };
   const flush = () => {
-    if (!paragraph.length) return;
-    const value = paragraph.join(" ").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1").replace(/`([^`]+)`/g, "$1");
-    const node = text("p", "");
-    for (const part of value.split(/(\[\[EM [0-9]+(?:\.[0-9]+)?]])/g)) {
-      const reference = part.match(/^\[\[(EM [0-9]+(?:\.[0-9]+)?)]]$/);
-      if (reference) node.append(text("small", reference[1], "source-reference"));
-      else node.append(document.createTextNode(part));
-    }
-    container.append(node); paragraph = [];
+    if (paragraph.length) { container.append(inline("p", paragraph.join(" ").replace(/\[\[EM [0-9]+(?:\.[0-9]+)?]]/g, ""))); paragraph = []; }
+  };
+  const flushTable = () => {
+    if (!tableLines.length) return;
+    const frame = document.createElement("div"); frame.className = "table-scroll"; frame.tabIndex = 0; frame.setAttribute("role", "region"); frame.setAttribute("aria-label", "Tabel bacaan; geser untuk kolom lainnya");
+    const table = document.createElement("table");
+    tableLines.filter(line => !/^\|?\s*:?-{3,}/.test(line)).forEach((line, index) => {
+      const row = document.createElement("tr");
+      line.trim().replace(/^\||\|$/g, "").split(/(?<!\\)\|/).forEach(cell => row.append(inline(index === 0 ? "th" : "td", cell.trim().replace(/\\\|/g, "|")))); table.append(row);
+    }); frame.append(table); container.append(frame); tableLines = [];
   };
   for (const line of lines) {
+    if (/^\[\^[^]]+]:/.test(line)) continue;
+    if (line.trim().startsWith("|") && (line.match(/\|/g) || []).length >= 2) { flush(); tableLines.push(line); continue; }
+    flushTable();
     const heading = line.match(/^(#{1,3})\s+(.+)$/);
     if (!line.trim()) { flush(); listNode = null; continue; }
-    if (heading) { flush(); listNode = null; container.append(text(`h${heading[1].length}`, heading[2])); continue; }
-    if (line.startsWith("> ")) { flush(); listNode = null; container.append(text("blockquote", line.slice(2))); continue; }
-    const bullet = line.match(/^\s*[-*+]\s+(.+)$/);
-    if (bullet) { flush(); if (!listNode) { listNode = document.createElement("ul"); container.append(listNode); } listNode.append(text("li", bullet[1])); continue; }
+    if (/^\s*(?:-{3,}|\*{3,}|_{3,})\s*$/.test(line)) { flush(); container.append(document.createElement("hr")); continue; }
+    if (heading) { flush(); listNode = null; container.append(inline(`h${heading[1].length}`, heading[2])); continue; }
+    if (line.startsWith("> ")) { flush(); listNode = null; container.append(inline("blockquote", line.slice(2))); continue; }
+    const bullet = line.match(/^\s*(?:[-*+]|\d+[.)])\s+(.+)$/);
+    if (bullet) { flush(); const type = /^\s*\d/.test(line) ? "ol" : "ul"; if (!listNode || listNode.tagName.toLowerCase() !== type) { listNode = document.createElement(type); container.append(listNode); } listNode.append(inline("li", bullet[1])); continue; }
     listNode = null; paragraph.push(line.trim());
   }
-  flush();
+  flush(); flushTable();
 }
 
 function addEditionChoices(container, book) {
@@ -363,6 +370,7 @@ async function openBook(book, options = {}) {
     addClassification(metadata, book);
     const top = document.createElement("div"); top.className = "reader-top"; top.append(cover, metadata);
     const nodes = [...manifest.nodes].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
+    activeChapters = nodes;
     if (options.chapterId) {
       const requested = nodes.find(node => node.id === options.chapterId);
       if (requested) { await openChapter(book, requested, reader); return; }
@@ -480,14 +488,19 @@ async function openChapter(book, node, destination) {
     if (!pending) storageSet(`last:${book.workId}:${book.locale}`, node.id);
     const section = document.createElement("article"); section.className = "chapter";
     const bar = document.createElement("div"); bar.className = "chapter-heading"; const back = text("button", "← Daftar isi"); back.type = "button"; back.addEventListener("click", () => openBook(book)); bar.append(back, text("h2", node.title));
-    const body = document.createElement("div"); body.className = "chapter-body"; renderMarkdown(markdown, body);
+    const body = document.createElement("div"); body.className = "chapter-body"; renderMarkdown(markdown, body, book.locale);
     const firstHeading = body.firstElementChild;
-    if (firstHeading?.matches("h1,h2,h3") && firstHeading.textContent.trim() === node.title.trim()) firstHeading.remove();
+    if (!firstHeading?.matches("h1,h2,h3") || firstHeading.textContent.trim() !== node.title.trim()) body.prepend(text("h1", node.title));
     const end = document.createElement("div"); end.className = "reading-end"; end.setAttribute("aria-label", "Akhir bab"); body.append(end);
     section.append(bar);
     const metadata = chapterMetadata(node, book.locale);
     if (metadata) section.append(text("p", metadata, "edition-note"));
     section.append(body); destination.replaceChildren(section);
+    const cleanupTools = setupBookReaderTools(book, node, body, bar);
+    const sequence = flattenReadableChapters(book, node);
+    const footer = document.createElement("nav"); footer.className = "chapter-navigation"; footer.setAttribute("aria-label", "Navigasi bacaan");
+    sequence.forEach(({ label, target }) => { const button = text("button", label); button.type = "button"; button.addEventListener("click", () => openChapter(book, target, destination)); footer.append(button); });
+    section.append(footer);
     activePositionKey = `position:${book.workId}:${book.locale}:${node.id}`;
     const savedY = Number(storageGet(activePositionKey));
     requestAnimationFrame(() => {
@@ -509,7 +522,7 @@ async function openChapter(book, node, destination) {
       } else clearTimeout(readTimer);
     });
     if (!pending) observer.observe(end);
-    stopReadTracking = () => { clearTimeout(readTimer); observer.disconnect(); };
+    stopReadTracking = () => { clearTimeout(readTimer); observer.disconnect(); cleanupTools(); };
   } catch (error) {
     if (request !== readerRequest) return;
     const message = text("p", error.message || "Bab belum dapat dimuat.", "error");
@@ -547,3 +560,10 @@ document.querySelector('#show-catalog').addEventListener('click', () => {
   document.querySelector('.catalog-panel').scrollIntoView({ block: 'start' });
   search.focus({ preventScroll: true });
 });
+
+function flattenReadableChapters(book, current) {
+  const nodes = activeChapters.filter(node => node.content?.path && node.availability !== "pending");
+  const index = nodes.findIndex(node => node.id === current.id);
+  if (index < 0) return [];
+  return [{ label: "← Sebelumnya", target: nodes[index - 1] }, { label: "Berikutnya →", target: nodes[index + 1] }].filter(item => item.target);
+}
