@@ -31,3 +31,20 @@ python -m http.server 8000 --directory site
 ```
 
 Then open `http://localhost:8000`.
+
+## Book reader tools
+
+The book reader provides local paper themes, font size, line spacing, alignment,
+native browser text selection, range highlights and notes. Notes and reading
+appearance are saved in this browser's local storage; they are not synchronized
+to the Android account or Firestore. Revised source text is checked against the
+saved text snapshot before a highlight is painted.
+
+Markdown tables scroll inside their own frame. Inline formatting, footnotes and
+Bible references retain their actions. The Bible dialog opens the installed
+SabatKu Android app through `sabatku://bible`; the website does not host Bible
+verse text. External provider readers keep their provider's capabilities.
+
+The 28 October 2026 reader audit checked 390×844, 844×390 and 1280×800 browser
+viewports, paper preferences, exact-word highlighting, persistence after reload
+and the Bible reference dialog. This does not replace Android device testing.
