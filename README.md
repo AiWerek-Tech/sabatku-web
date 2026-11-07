@@ -6,6 +6,7 @@ Public promotional website for the SabatKu Android app, published with GitHub Pa
 
 - `site/` — responsive, Indonesian-first static landing page and brand assets.
 - `site/library/` — Web reader for the versioned `sabatku-library-v1` static catalog. It validates HTTPS/same-origin paths and chapter size/SHA-256 before displaying text.
+- `site/privacy/` and `site/delete-account/` — Indonesian and English pages for the Android privacy policy and email requests to delete a SabatKu account.
 - The beta APK for testers is published as a GitHub Release asset and linked from the site's download button; it is not a production Play Store release.
 - `site/index.html#pembaruan` — public changelog for the latest beta. Update this section and the download link with each APK release.
 - `.github/workflows/pages.yml` — deploys `site/` to GitHub Pages whenever `main` is updated.
@@ -21,6 +22,19 @@ The page intentionally says SabatKu is being prepared for Google Play Store. Rep
 The book reader uses `https://aiwerek-tech.github.io/sabatku-books/catalog.json` by default. GitHub Pages must be enabled for `sabatku-books`; a preview catalog can be selected with `?catalog=https://.../catalog.json`. Book pages are read online; offline book installation is a later client/package integration step.
 
 The donation estimate uses the USD/IDR reference rate available on 9 October 2026 and is labeled as approximate. Refresh the rupiah estimate if the page is updated later.
+
+## Privacy and account deletion
+
+Use these URLs in the corresponding Play Console fields after the pages are live:
+
+- Privacy policy: `https://aiwerek-tech.github.io/sabatku-web/privacy/`
+- Account deletion: `https://aiwerek-tech.github.io/sabatku-web/delete-account/`
+
+The deletion page opens an email draft addressed to the project's documented Firebase support mailbox, `aiwerek.tech@gmail.com`. It also displays the address for people who use webmail. Confirm that the inbox is monitored and exercise the full request workflow on a designated test account before using the link in Play Console.
+
+The operator should verify account ownership through a challenge sent to the verified email from the Firebase Authentication record. A sender address or a name on its own is insufficient. If the registered inbox is unavailable, use another independently verified proof of ownership before acting. Do not request Google sign-in codes, passwords, private study content, or backups. Keep the request and any reply private.
+
+After verification, use the corresponding Firebase UID to carry out the same order as the Android deletion flow. Create or preserve `users/{uid}/account/deletion` with `startedAt` set to the server timestamp to block client uploads, delete `users/{uid}/studyData` documents and `users/{uid}/profile/main`, and then delete the matching Firebase Authentication user. Verify the target UID and completed deletions before confirming by email. Leave the deletion marker in place for the purpose explained in the privacy policy. Preserve the marker and resume incomplete work if an operation fails. The web path handles server data, and the page explains how users can manage copies stored on their devices.
 
 ## Preview locally
 

@@ -172,7 +172,8 @@ h1, h2, h3 { font-family: var(--display); }
 .footer-inner { width: min(1160px,100%); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 10px; }
 .footer-brand { color: var(--navy); font-family: var(--display); font-size: 17px; font-weight: 800; letter-spacing: -.06em; }
 .footer-brand span { color: var(--gold-deep); }
-.footer-inner > a:last-child { color: var(--blue); font-weight: 700; }
+.footer-links { display: flex; flex-wrap: wrap; column-gap: 20px; }
+.footer-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--blue); font-weight: 700; }
 .footer-note { width: min(1160px,100%); margin: 18px auto 0; color: #9aa3af; font-size: 9px; text-align: center; }
 
 @media (max-width: 950px) {
