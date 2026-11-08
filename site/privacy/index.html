@@ -30,13 +30,13 @@
         <section>
           <h2>Data belajar dan akun</h2>
           <p>Jika memakai profil perangkat, nama tampilan, pilihan kelas, catatan, jawaban, sorotan, penanda, riwayat, progres, dan preferensi belajar disimpan pada perangkat. Data tersebut dapat hilang jika data aplikasi dihapus atau perangkat hilang. Anda dapat menyimpan cadangan belajar dengan sandi pilihan sendiri.</p>
-          <p>Jika menghubungkan Google, Firebase Authentication memproses identitas masuk Anda, termasuk ID akun, alamat email, nama, dan foto profil yang diberikan oleh Google. SabatKu memakai alamat email untuk mengenali akun pada perangkat. Cloud Firestore menyimpan profil, data belajar, dan preferensi yang didukung di bawah ID SabatKu agar bisa disinkronkan pada perangkat dengan akun yang sama. Versi catatan yang berbeda dapat disimpan sebagai salinan yang dapat dipulihkan. Keluar dari akun mempertahankan salinan lokal.</p>
+          <p>Jika menghubungkan Google, Firebase Authentication memproses identitas masuk Anda, termasuk ID akun, alamat email, nama, dan foto profil yang diberikan oleh Google. SabatKu memakai alamat email untuk mengenali akun pada perangkat. Cloud Firestore menyimpan profil, data belajar, pilihan tahap panduan bayi, dan preferensi yang didukung di bawah ID SabatKu agar bisa disinkronkan pada perangkat dengan akun yang sama. Versi catatan yang berbeda dapat disimpan sebagai salinan yang dapat dipulihkan. Keluar dari akun mempertahankan salinan lokal.</p>
         </section>
 
         <section>
           <h2>Lokasi, pengingat, dan suara</h2>
           <p>Jika Anda memilih lokasi otomatis dan mengizinkan aksesnya, SabatKu memakai lokasi untuk menghitung waktu Sabat. Anda juga bisa memilih kota secara manual. Layanan geokode Android dapat memproses lokasi atau pencarian kota. Kota, koordinat, dan preferensi pengingat yang didukung dapat disinkronkan ketika akun terhubung. Izin dan jadwal notifikasi dikelola pada tiap perangkat. Notifikasi dapat memuat nama tampilan Anda.</p>
-          <p>Saat Anda memilih respons suara atau pembacaan dengan suara, fitur terkait menggunakan layanan pengenal suara atau pembaca teks Android. Pemrosesan pada perangkat atau melalui jaringan bergantung pada layanan yang digunakan. SabatKu memakai hasil pengenalan untuk menanggapi perintah tersebut.</p>
+          <p>Respons suara membuka pengenal suara Android hanya setelah tombol diketuk. SabatKu memakai teks hasilnya untuk mengonfirmasi perintah. Pembacaan suara meneruskan teks bacaan atau pengingat ke mesin Text-to-Speech Android pilihan Anda; pengingat personal dapat menyebut nama tampilan. Pembacaan pengingat memerlukan suara offline yang terpasang. Pengenalan ucapan dapat diproses lokal atau melalui jaringan, bergantung pada penyedianya. Fitur ini tidak merekam atau mengunggah berkas audio sendiri dari SabatKu.</p>
         </section>
 
         <section>
@@ -49,11 +49,13 @@
           <h2>Retensi dan penghapusan</h2>
           <p>Data akun dan belajar di cloud disimpan untuk menyediakan akun dan sinkronisasi hingga akun dihapus. Anda dapat menghapus akun dari <strong>Profilku → Hapus akun SabatKu</strong> atau <a href="../delete-account/">mengajukan permintaan lewat web</a>. Penghapusan mencakup akun autentikasi SabatKu, profil cloud, dan data belajar yang terkait. Penanda minimal berisi identitas internal dan waktu proses dapat dipertahankan untuk mencegah data yang telah dihapus terunggah kembali.</p>
           <p>Penghapusan melalui aplikasi juga membersihkan data pribadi terkait pada perangkat yang dipakai. Kelola salinan lokal di perangkat lain, berkas ekspor, dan materi unduhan pada lokasi masing-masing. Akun Google Anda tetap dapat digunakan untuk layanan Google.</p>
+          <p>Penanda penghapusan memuat ID akun internal pada jalur data dan waktu mulai proses, tanpa isi catatan belajar. Implementasi saat ini tidak menetapkan kedaluwarsa otomatis untuk penanda ini. Log teknis dan salinan cadangan pada Google/Firebase mengikuti <a href="https://firebase.google.com/support/privacy">praktik retensi penyedia tersebut</a>; penghapusan akun tidak berarti setiap salinan teknis langsung hilang.</p>
+          <p>Permintaan hapus akun dibalas maksimal 2 hari kerja sejak diterima. Penghapusan akun diselesaikan maksimal 7 hari kerja setelah kepemilikan terverifikasi. Waktu menunggu verifikasi kepemilikan tidak termasuk dalam batas penyelesaian.</p>
         </section>
 
         <section>
           <h2>Penggunaan keluarga dan kontak</h2>
-          <p>Orang tua dan guru dapat memilih materi anak untuk belajar bersama atau mengajar. Pilihan kelas tidak menetapkan usia pemilik akun. Untuk pertanyaan privasi, hubungi <a href="mailto:aiwerek.tech@gmail.com?subject=Pertanyaan%20privasi%20SabatKu">aiwerek.tech@gmail.com</a>. Email dan informasi yang Anda berikan digunakan untuk memverifikasi, menanggapi, dan menindaklanjuti permintaan Anda.</p>
+          <p>Anak menggunakan SabatKu bersama orang tua atau guru. Pendamping mengelola profil, akun Google opsional, izin, dan tautan keluar aplikasi. Pilihan kelas tidak menetapkan usia pemilik akun. Untuk pertanyaan privasi, hubungi <a href="mailto:aiwerek.tech@gmail.com?subject=Pertanyaan%20privasi%20SabatKu">aiwerek.tech@gmail.com</a>. Email dan informasi yang Anda berikan digunakan untuk memverifikasi, menanggapi, dan menindaklanjuti permintaan Anda.</p>
         </section>
       </article>
 
@@ -64,13 +66,13 @@
         <section>
           <h3>Study data and accounts</h3>
           <p>With a device profile, your display name, class selections, notes, answers, highlights, bookmarks, history, progress, and study preferences are stored on your device. You can lose this data if the app's data is cleared or the device is lost. You can save a study backup with a password you choose.</p>
-          <p>If you connect Google, Firebase Authentication processes your sign-in identity, including the account ID, email address, name, and profile photo provided by Google. SabatKu uses the email address to identify your account on your device. Cloud Firestore stores your profile, study data, and supported preferences under your SabatKu ID so you can sync on devices using the same account. Different versions of notes may be kept as recoverable copies. Signing out keeps the local copy.</p>
+          <p>If you connect Google, Firebase Authentication processes your sign-in identity, including the account ID, email address, name, and profile photo provided by Google. SabatKu uses the email address to identify your account on your device. Cloud Firestore stores your profile, study data, baby-guide stage choices, and supported preferences under your SabatKu ID so you can sync on devices using the same account. Different versions of notes may be kept as recoverable copies. Signing out keeps the local copy.</p>
         </section>
 
         <section>
           <h3>Location, reminders, and voice</h3>
           <p>If you choose automatic location and grant access, SabatKu uses your location to calculate Sabbath times. You can also choose a city manually. Android's geocoding service may process a location or city search. Your city, coordinates, and supported reminder preferences may sync when your account is connected. Notification permissions and schedules are managed on each device. Notifications may include your display name.</p>
-          <p>When you choose a voice response or read-aloud, the feature uses Android speech recognition or text-to-speech services. Local or network processing depends on the service in use. SabatKu uses the recognition result to respond to your command.</p>
+          <p>Voice response opens Android's speech recognizer only when you tap it. SabatKu uses the returned text to confirm your command. Read-aloud sends reading or reminder text to your selected Android text-to-speech engine; personalized reminders can include your display name. Reminder playback requires an installed offline voice. Speech recognition may use local or network processing depending on its provider. SabatKu does not record or upload an audio file itself in these features.</p>
         </section>
 
         <section>
@@ -83,11 +85,13 @@
           <h3>Retention and deletion</h3>
           <p>Cloud account and study data are retained to provide your account and synchronization until the account is deleted. You can delete your account from <strong>My profile → Delete SabatKu account</strong> or <a href="../delete-account/#en">request deletion on the web</a>. Deletion covers the SabatKu authentication account, cloud profile, and associated study data. A minimal marker containing an internal identifier and timestamp may be retained to prevent deleted data from being uploaded again.</p>
           <p>Deletion in the app also clears associated personal data on the device used. Manage local copies on other devices, exported files, and downloaded content in their respective locations. You can continue using your Google account for Google services.</p>
+          <p>The deletion marker contains an internal account identifier in its data path and the process start time, not your study notes. The current implementation has no automatic expiry for this marker. Technical logs and backup copies held by Google/Firebase follow <a href="https://firebase.google.com/support/privacy">those providers' retention practices</a>; deleting an account does not mean every technical copy disappears immediately.</p>
+          <p>Account deletion requests are answered within 2 business days of receipt. After ownership is verified, account deletion is completed within 7 business days. Time awaiting ownership verification is not part of the completion period.</p>
         </section>
 
         <section>
           <h3>Family use and contact</h3>
-          <p>Parents and teachers can choose children's materials to study together or teach. A class choice does not establish the account holder's age. For privacy questions, contact <a href="mailto:aiwerek.tech@gmail.com?subject=SabatKu%20privacy%20question">aiwerek.tech@gmail.com</a>. We use your email and the information you provide to verify, respond to, and follow up on your request.</p>
+          <p>Children use SabatKu with a parent or teacher. The adult manages the profile, optional Google account, permissions and external links. A class choice does not establish the account holder's age. For privacy questions, contact <a href="mailto:aiwerek.tech@gmail.com?subject=SabatKu%20privacy%20question">aiwerek.tech@gmail.com</a>. We use your email and the information you provide to verify, respond to, and follow up on your request.</p>
         </section>
       </article>
     </main>

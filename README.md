@@ -36,6 +36,17 @@ The operator should verify account ownership through a challenge sent to the ver
 
 After verification, use the corresponding Firebase UID to carry out the same order as the Android deletion flow. Create or preserve `users/{uid}/account/deletion` with `startedAt` set to the server timestamp to block client uploads, delete `users/{uid}/studyData` documents and `users/{uid}/profile/main`, and then delete the matching Firebase Authentication user. Verify the target UID and completed deletions before confirming by email. Leave the deletion marker in place for the purpose explained in the privacy policy. Preserve the marker and resume incomplete work if an operation fails. The web path handles server data, and the page explains how users can manage copies stored on their devices.
 
+See [the deletion operations runbook](docs/account-deletion-operations.md) for verification, recovery and acceptance evidence. The owner set a response target of 2 business days from receipt and completion within 7 business days after ownership verification. Inbox monitoring, support-email retention and a completed test-account exercise still need operational verification.
+
+Check the account pages offline before publishing:
+
+```powershell
+python tools/check_account_pages.py --android-root ../sabatku-android
+python -m unittest discover -s tools -p test_check_account_pages.py -v
+```
+
+Without `--android-root`, the checker validates the website and reports Android parity as `NOT RUN`. These checks do not send email, delete an account, deploy the website or certify policy compliance.
+
 ## Preview locally
 
 Serve the `site/` directory with any static HTTP server, for example:
