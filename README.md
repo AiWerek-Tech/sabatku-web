@@ -7,8 +7,8 @@ Public promotional website for the SabatKu Android app, published with GitHub Pa
 - `site/` — responsive, Indonesian-first static landing page and brand assets.
 - `site/library/` — Web reader for the versioned `sabatku-library-v1` static catalog. It validates HTTPS/same-origin paths and chapter size/SHA-256 before displaying text.
 - `site/privacy/` and `site/delete-account/` — Indonesian and English pages for the Android privacy policy and email requests to delete a SabatKu account.
-- The beta APK for testers is published as a GitHub Release asset and linked from the site's download button; it is not a production Play Store release.
-- `site/index.html#pembaruan` — public changelog for the latest beta. Update this section and the download link with each APK release.
+- Android installation and updates link to the Google Play internal test. Prospective testers contact the SabatKu WhatsApp group for an invitation.
+- `site/index.html#pembaruan` — public changelog for Play releases and the historical GitHub beta.
 - `.github/workflows/pages.yml` — deploys `site/` to GitHub Pages whenever `main` is updated.
 
 ## Publish
@@ -17,11 +17,9 @@ Public promotional website for the SabatKu Android app, published with GitHub Pa
 2. In **Settings → Pages**, select **GitHub Actions** as the build and deployment source.
 3. The workflow publishes to `https://aiwerek-tech.github.io/sabatku-web/` after it succeeds.
 
-The page intentionally says SabatKu is being prepared for Google Play Store. Replace that status and add the Play Store link after the app is actually listed. The beta APK is not copied into this website repository.
+Keep the active track and version current in the homepage and the testing instructions. Switch the download buttons to the public Play listing after production rollout.
 
 The book reader uses `https://aiwerek-tech.github.io/sabatku-books/catalog.json` by default. GitHub Pages must be enabled for `sabatku-books`; a preview catalog can be selected with `?catalog=https://.../catalog.json`. Book pages are read online; offline book installation is a later client/package integration step.
-
-The donation estimate uses the USD/IDR reference rate available on 9 October 2026 and is labeled as approximate. Refresh the rupiah estimate if the page is updated later.
 
 ## Privacy and account deletion
 
