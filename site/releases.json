@@ -1,18 +1,35 @@
 {
   "schemaVersion": 1,
-  "latestVersion": "1.0.2",
-  "latestVersionCode": 22,
-  "channel": "google-play-internal",
+  "latestVersion": "1.0.3",
+  "latestVersionCode": 25,
+  "channel": "google-play-closed",
   "webChangelogUrl": "https://aiwerek-tech.github.io/sabatku-web/#pembaruan",
-  "playTestingUrl": "https://play.google.com/apps/internaltest/4701142475167507661",
+  "playTestingUrl": "https://play.google.com/store/apps/details?id=id.sabatku.app",
   "releases": [
+    {
+      "versionName": "1.0.3",
+      "versionCode": 25,
+      "date": "2026-11-15",
+      "track": "play-closed",
+      "badgeId": "Pengujian tertutup · Alpha",
+      "badgeEn": "Closed testing · Alpha",
+      "headlineId": "Pengujian tertutup di Google Play",
+      "headlineEn": "Closed testing on Google Play",
+      "notesId": [
+        "Build 25 membawa fitur yang sama dengan build internal 24 dan tersedia untuk penguji tertutup di Indonesia."
+      ],
+      "notesEn": [
+        "Build 25 has the same features as internal build 24 and is available to closed testers in Indonesia."
+      ],
+      "url": "https://aiwerek-tech.github.io/sabatku-web/#pembaruan"
+    },
     {
       "versionName": "1.0.2",
       "versionCode": 22,
       "date": "2026-11-14",
       "track": "play-internal",
-      "badgeId": "Pengujian internal terbaru",
-      "badgeEn": "Latest internal release",
+      "badgeId": "Riwayat pengujian internal",
+      "badgeEn": "Internal testing history",
       "headlineId": "Dasbor yang bisa diatur, Pekan Doa, dan pengingat",
       "headlineEn": "Customizable Home, Week of Prayer, and reminders",
       "notesId": [

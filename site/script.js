@@ -60,7 +60,7 @@ fetch('releases.json', { cache: 'no-cache' })
         heroRelease.textContent = '';
         const pip = document.createElement('span');
         pip.className = 'status-pip';
-        heroRelease.append(pip, ` Versi ${latestRelease.versionName} (${latestRelease.versionCode}) · APK debug & uji internal Google Play · Android 8.0 ke atas`);
+        heroRelease.append(pip, ` Versi ${latestRelease.versionName} (${latestRelease.versionCode}) · ${feed.channel === "google-play-closed" ? "Pengujian tertutup Google Play" : "Google Play"} · Android 8.0 ke atas`);
       }
       const mobileTitle = document.querySelector('.mobile-download strong');
       if (mobileTitle) mobileTitle.textContent = `SabatKu ${latestRelease.versionName}`;

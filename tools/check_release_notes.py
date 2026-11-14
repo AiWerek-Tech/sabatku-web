@@ -14,6 +14,7 @@ from urllib.parse import urlparse
 
 VALID_TRACKS = {
     "play-internal",
+    "play-closed",
     "play-production",
     "github-release",
     "github-beta",
@@ -185,7 +186,7 @@ def validate_index_html(index_path: Path, data: dict) -> list[str]:
     for entry in data.get("releases", []):
         vname = entry.get("versionName", "")
         track = entry.get("track", "")
-        if track in ("play-internal", "play-production", "github-release") and vname not in html:
+        if track in ("play-internal", "play-closed", "play-production", "github-release") and vname not in html:
             errors.append(f"site/index.html is missing active release {vname}")
 
     return errors

@@ -7,7 +7,7 @@ Public promotional website for the SabatKu Android app, published with GitHub Pa
 - `site/` — responsive, Indonesian-first static landing page and brand assets.
 - `site/library/` — Web reader for the versioned `sabatku-library-v1` static catalog. It validates HTTPS/same-origin paths and chapter size/SHA-256 before displaying text.
 - `site/privacy/` and `site/delete-account/` — Indonesian and English pages for the Android privacy policy and email requests to delete a SabatKu account.
-- Android downloads offer a direct debug APK from GitHub Releases and Google Play internal testing. Play testers contact the SabatKu WhatsApp group for an invitation.
+- Android download buttons open the Google Play listing. Closed testers contact the SabatKu WhatsApp group for the Alpha invitation. The debug APK remains linked from its historical release.
 - `site/index.html#pembaruan` & `site/releases.json` — public changelog and bilingual machine-readable release feed consumed by the Android app (`What's new in SabatKu`) and progressively rendered on SabatKu Web.
 - `.github/workflows/pages.yml` — deploys `site/` to GitHub Pages whenever `main` is updated.
 
@@ -17,7 +17,7 @@ Public promotional website for the SabatKu Android app, published with GitHub Pa
 2. In **Settings → Pages**, select **GitHub Actions** as the build and deployment source.
 3. The workflow publishes to `https://aiwerek-tech.github.io/sabatku-web/` after it succeeds.
 
-Keep the active track and version current in the homepage and the testing instructions. Switch the download buttons to the public Play listing after production rollout.
+Keep the active track and version current in the homepage and the testing instructions. Update the testing instructions after production rollout.
 When replacing the direct APK, upload the matching debug build to GitHub Releases and update `apkDownloadUrl` in `site/releases.json`; the homepage applies that URL to all direct-download links.
 
 The book reader uses `https://aiwerek-tech.github.io/sabatku-books/catalog.json` by default. GitHub Pages must be enabled for `sabatku-books`; a preview catalog can be selected with `?catalog=https://.../catalog.json`. Book pages are read online; offline book installation is a later client/package integration step.
