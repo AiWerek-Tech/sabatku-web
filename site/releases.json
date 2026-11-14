@@ -13,15 +13,21 @@
       "track": "play-internal",
       "badgeId": "Pengujian internal terbaru",
       "badgeEn": "Latest internal release",
-      "headlineId": "Pekan Doa Penatalayanan, program gereja offline, serta audit Notifikasi & Pengaturan",
-      "headlineEn": "Week of Prayer, offline church programs, and Notifications & Settings refinement",
+      "headlineId": "Dasbor yang bisa diatur, Pekan Doa, dan pengingat",
+      "headlineEn": "Customizable Home, Week of Prayer, and reminders",
       "notesId": [
+        "Pilih dan urutkan kartu di dasbor Hari Ini. Kartu Doa 777 mengikuti jadwal pengingat, dan kartu ritme harian menyesuaikan layar sempit serta ukuran teks besar.",
+        "Pekan Doa mempertahankan filter dan posisi gulir. Lanjut baca mengikuti jadwal dan progres, audio Spotify dapat dibuka dari bacaan, dan pembukaan PDF online bisa dibatalkan.",
+        "Penyiapan izin lokasi, notifikasi, dan alarm tepat waktu dipisahkan. Pengingat yang pernah dimatikan tetap nonaktif.",
         "Pekan Doa Penatalayanan 2026 (Dewasa & Anak) hadir dengan 8 hari bacaan lengkap offline dalam Bahasa Indonesia dan Inggris, pelacakan progres, sorotan serta catatan paragraf, dan rujukan materi resmi.",
         "Dasbor Hari Ini dan Kalender Gereja menampilkan program berlangsung maupun mendatang beserta pratinjau PDF serta penyimpanan materi program secara offline.",
         "Menu Notifikasi kini difokuskan untuk menampilkan info terbaru, pembaruan materi, dan pengumuman agenda gereja; seluruh pengaturan dipindahkan ke Pengaturan dengan daftar kategori ringkas dan sub-halaman khusus.",
         "Pengaturan Yang Baru di SabatKu dan Tentang Aplikasi kini menampilkan riwayat rilis 1.0.x serta terintegrasi dengan SabatKu Web, dilengkapi penyegaran dasbor (pull-to-refresh) dan penyempurnaan bacaan harian."
       ],
       "notesEn": [
+        "Choose and reorder Home cards. Prayer 777 reflects your schedule, and daily rhythm cards adapt to narrow screens and large text.",
+        "Week of Prayer remembers filters and scroll position. Resume follows the schedule and reading progress, Spotify is accessible from the reading, and online PDF loading can be cancelled.",
+        "Location, notification, and exact alarm permissions have separate setup steps. Existing reminder opt-outs are respected.",
         "Week of Prayer Stewardship 2026 (Adult & Children) brings 8 offline daily readings in Indonesian and English, progress tracking, paragraph highlights and notes, plus official material links.",
         "The Today dashboard and Church Calendar highlight ongoing and upcoming programs with in-app PDF viewing and offline program material downloads.",
         "The Notifications menu now focuses on latest info, content updates, and church agenda announcements, while all preferences live in a structured Settings list with dedicated sub-pages.",
@@ -271,5 +277,6 @@
       "summaryNoteId": "Ringkasan retrospektif fitur sepanjang pra-rilis perdana beta01 hingga beta07.",
       "summaryNoteEn": "Retrospective summary of capabilities developed across beta01 through beta07."
     }
-  ]
+  ],
+  "apkDownloadUrl": "https://github.com/AiWerek-Tech/sabatku-web/releases/download/v1.0.2-debug/SabatKu-1.0.2-debug.apk"
 }

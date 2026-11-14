@@ -41,6 +41,31 @@ fetch('releases.json', { cache: 'no-cache' })
   .then(response => (response.ok ? response.json() : null))
   .then(feed => {
     if (!feed || !Array.isArray(feed.releases)) return;
+    let apkUrl = null;
+    try {
+      if (typeof feed.apkDownloadUrl === 'string') apkUrl = new URL(feed.apkDownloadUrl, window.location.href);
+    } catch {}
+    const trustedApkUrl = apkUrl && apkUrl.protocol === 'https:' && apkUrl.hostname === 'github.com' &&
+      /^\/AiWerek-Tech\/sabatku-web\/releases\/download\/[^/]+\/[^/]+\.apk$/i.test(apkUrl.pathname)
+      ? apkUrl.href
+      : null;
+    if (trustedApkUrl) {
+      document.querySelectorAll('a[data-apk-download]').forEach(link => { link.href = trustedApkUrl; });
+    }
+
+    const latestRelease = feed.releases[0];
+    if (latestRelease && typeof latestRelease.versionName === 'string') {
+      const heroRelease = document.querySelector('.release-note');
+      if (heroRelease) {
+        heroRelease.textContent = '';
+        const pip = document.createElement('span');
+        pip.className = 'status-pip';
+        heroRelease.append(pip, ` Versi ${latestRelease.versionName} (${latestRelease.versionCode}) · APK debug & uji internal Google Play · Android 8.0 ke atas`);
+      }
+      const mobileTitle = document.querySelector('.mobile-download strong');
+      if (mobileTitle) mobileTitle.textContent = `SabatKu ${latestRelease.versionName}`;
+    }
+
     const changelogSection = document.querySelector('#pembaruan');
     const firstCard = changelogSection && changelogSection.querySelector('.changelog-card[data-version-code]');
     const staticTopCode = Number(firstCard?.getAttribute('data-version-code') || 0);
@@ -88,16 +113,5 @@ fetch('releases.json', { cache: 'no-cache' })
       fragment.appendChild(card);
     });
     changelogSection.insertBefore(fragment, firstCard);
-
-    const topRelease = newer[0];
-    const heroRelease = document.querySelector('.release-note');
-    if (heroRelease) {
-      heroRelease.textContent = '';
-      const pip = document.createElement('span');
-      pip.className = 'status-pip';
-      heroRelease.append(pip, ` Pengujian internal · versi ${topRelease.versionName} (${topRelease.versionCode}) · Android 8.0 ke atas`);
-    }
-    const mobileTitle = document.querySelector('.mobile-download strong');
-    if (mobileTitle) mobileTitle.textContent = `SabatKu ${topRelease.versionName}`;
   })
   .catch(() => {});
