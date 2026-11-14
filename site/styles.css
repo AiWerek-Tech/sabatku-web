@@ -411,6 +411,8 @@ h1, h2, h3 { font-family: var(--display); }
 .feature-grid-detailed .tag-row span { background:#f0f4ef; color:#456052; }
 .feature-availability { background:#e8efea; }
 .changelog-card { max-width:none; border-radius:24px; }
+.changelog-card + .changelog-card { margin-top:16px; }
+.release-pill-latest { background:#e8efea; color:#2b593f; }
 .changelog-content ul { font-size:15px; line-height:1.8; }
 .start-section,.faq-section { padding-block:80px; }
 .start-section { border-bottom:1px solid var(--line); }

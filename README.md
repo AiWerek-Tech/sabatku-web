@@ -8,7 +8,7 @@ Public promotional website for the SabatKu Android app, published with GitHub Pa
 - `site/library/` — Web reader for the versioned `sabatku-library-v1` static catalog. It validates HTTPS/same-origin paths and chapter size/SHA-256 before displaying text.
 - `site/privacy/` and `site/delete-account/` — Indonesian and English pages for the Android privacy policy and email requests to delete a SabatKu account.
 - Android installation and updates link to the Google Play internal test. Prospective testers contact the SabatKu WhatsApp group for an invitation.
-- `site/index.html#pembaruan` — public changelog for Play releases and the historical GitHub beta.
+- `site/index.html#pembaruan` & `site/releases.json` — public changelog and bilingual machine-readable release feed consumed by the Android app (`What's new in SabatKu`) and progressively rendered on SabatKu Web.
 - `.github/workflows/pages.yml` — deploys `site/` to GitHub Pages whenever `main` is updated.
 
 ## Publish
@@ -40,7 +40,8 @@ Check the account pages offline before publishing:
 
 ```powershell
 python tools/check_account_pages.py --android-root ../sabatku-android
-python -m unittest discover -s tools -p test_check_account_pages.py -v
+python tools/check_release_notes.py --android-root ../sabatku-android
+python -m unittest discover -s tools -p "test_*.py" -v
 ```
 
 Without `--android-root`, the checker validates the website and reports Android parity as `NOT RUN`. These checks do not send email, delete an account, deploy the website or certify policy compliance.

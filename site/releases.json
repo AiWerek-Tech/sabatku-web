@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "latestVersion": "1.0.2",
+  "latestVersionCode": 22,
+  "channel": "google-play-internal",
+  "webChangelogUrl": "https://aiwerek-tech.github.io/sabatku-web/#pembaruan",
+  "playTestingUrl": "https://play.google.com/apps/internaltest/4701142475167507661",
+  "releases": [
+    {
+      "versionName": "1.0.2",
+      "versionCode": 22,
+      "date": "2026-11-14",
+      "track": "play-internal",
+      "badgeId": "Pengujian internal terbaru",
+      "badgeEn": "Latest internal release",
+      "headlineId": "Pekan Doa Penatalayanan, program gereja offline, serta audit Notifikasi & Pengaturan",
+      "headlineEn": "Week of Prayer, offline church programs, and Notifications & Settings refinement",
+      "notesId": [
+        "Pekan Doa Penatalayanan 2026 (Dewasa & Anak) hadir dengan 8 hari bacaan lengkap offline dalam Bahasa Indonesia dan Inggris, pelacakan progres, sorotan serta catatan paragraf, dan rujukan materi resmi.",
+        "Dasbor Hari Ini dan Kalender Gereja menampilkan program berlangsung maupun mendatang beserta pratinjau PDF serta penyimpanan materi program secara offline.",
+        "Menu Notifikasi kini difokuskan untuk menampilkan info terbaru, pembaruan materi, dan pengumuman agenda gereja; seluruh pengaturan dipindahkan ke Pengaturan dengan daftar kategori ringkas dan sub-halaman khusus.",
+        "Pengaturan Yang Baru di SabatKu dan Tentang Aplikasi kini menampilkan riwayat rilis 1.0.x serta terintegrasi dengan SabatKu Web, dilengkapi penyegaran dasbor (pull-to-refresh) dan penyempurnaan bacaan harian."
+      ],
+      "notesEn": [
+        "Week of Prayer Stewardship 2026 (Adult & Children) brings 8 offline daily readings in Indonesian and English, progress tracking, paragraph highlights and notes, plus official material links.",
+        "The Today dashboard and Church Calendar highlight ongoing and upcoming programs with in-app PDF viewing and offline program material downloads.",
+        "The Notifications menu now focuses on latest info, content updates, and church agenda announcements, while all preferences live in a structured Settings list with dedicated sub-pages.",
+        "What's New and About pages in Settings now show 1.0.x release history and integrate directly with SabatKu Web, alongside Home pull-to-refresh and daily reading refinements."
+      ],
+      "url": "https://aiwerek-tech.github.io/sabatku-web/#pembaruan"
+    },
+    {
+      "versionName": "1.0.1",
+      "versionCode": 21,
+      "date": "2026-11-13",
+      "track": "play-internal",
+      "badgeId": "Rilis internal sebelumnya",
+      "badgeEn": "Previous internal release",
+      "headlineId": "Perbaikan masuk dengan Google",
+      "headlineEn": "Google sign-in fix for Google Play",
+      "notesId": [
+        "Konfigurasi masuk dengan Google disesuaikan dengan sertifikat aplikasi yang didistribusikan oleh Google Play.",
+        "Tombol Lanjutkan dengan Google membuka pemilih akun Google dengan opsi coba lagi atau lanjut tanpa akun bila pemilih gagal dibuka.",
+        "Daftar akun dan proses masuk berhasil diverifikasi pada perangkat uji setelah memperbarui ke 1.0.1 melalui Play Store."
+      ],
+      "notesEn": [
+        "Google sign-in configuration aligned with the app signing certificate distributed by Google Play.",
+        "Continue with Google opens the account picker with clear retry and continue-without-account options if selection fails.",
+        "Account registration and Google sign-in verified on a test device after updating to 1.0.1 through Google Play."
+      ],
+      "url": "https://aiwerek-tech.github.io/sabatku-web/#pembaruan"
+    },
+    {
+      "versionName": "1.0.0",
+      "versionCode": 20,
+      "date": "2026-11-13",
+      "track": "play-internal",
+      "badgeId": "Rilis internal perdana",
+      "badgeEn": "First Play internal release",
+      "headlineId": "Distribusi pengujian beralih ke Google Play",
+      "headlineEn": "Testing distribution moves to Google Play",
+      "notesId": [
+        "Penguji terdaftar mulai memasang dan memperbarui SabatKu melalui Google Play Store menggunakan identitas aplikasi final id.sabatku.app.",
+        "Laporan pemilih akun Google dari rilis awal ini langsung ditangani pada pembaruan 1.0.1."
+      ],
+      "notesEn": [
+        "Invited testers began installing and updating SabatKu through Google Play Store using the final application ID id.sabatku.app.",
+        "Account picker reports from this initial Play release were resolved in 1.0.1."
+      ],
+      "url": "https://aiwerek-tech.github.io/sabatku-web/#pembaruan"
+    },
+    {
+      "versionName": "0.1.0-beta17",
+      "versionCode": 19,
+      "date": "2026-11-09",
+      "track": "github-beta",
+      "badgeId": "Arsip beta GitHub",
+      "badgeEn": "GitHub beta archive",
+      "headlineId": "Pengalaman belajar harian dan persiapan Sabat yang lebih menyatu",
+      "headlineEn": "A more complete daily study and Sabbath experience",
+      "notesId": [
+        "Beranda diperbarui agar pelajaran hari ini, ritme bacaan, dan waktu Sabat lebih mudah dipantau.",
+        "Sekolah Sabat, Alkitab, buku digital, dan PDF mendapat navigasi serta kontrol baca dan unduh yang lebih konsisten.",
+        "Pengingat bacaan, Doa 777, dan Sabat lebih tertata; pengalaman keluarga, privasi, pencadangan, dan sinkronisasi juga diperkuat."
+      ],
+      "notesEn": [
+        "The Home screen makes today's lesson, reading rhythm, and Sabbath time easier to follow.",
+        "Sabbath School, Bible, digital books, and PDFs have more consistent navigation and reading and download controls.",
+        "Reading, Prayer 777, and Sabbath reminders are better organized, alongside stronger family, privacy, backup, and sync experiences."
+      ],
+      "url": "https://github.com/AiWerek-Tech/sabatku-web/releases/tag/v0.1.0-beta17"
+    },
+    {
+      "versionName": "0.1.0-beta16",
+      "versionCode": 18,
+      "date": "2026-11-01",
+      "track": "github-beta",
+      "badgeId": "Arsip beta GitHub",
+      "badgeEn": "GitHub beta archive",
+      "headlineId": "Pengalaman Alkitab, pelajaran, dan PDF yang lebih nyaman",
+      "headlineEn": "A smoother Bible, lesson, and PDF experience",
+      "notesId": [
+        "Pembaca Alkitab memudahkan pencarian dan perbandingan terjemahan, membuka materi terkait, serta kembali ke bacaan sebelumnya. Catatan dan sorotan lebih aman dicadangkan dan dipulihkan.",
+        "Unduh, perbarui, baca online, dan akses offline Sekolah Sabat kini lebih jelas. Unduhan PDF edisi penuh mencakup semua PDF pelajaran utama; pembaruan gagal mempertahankan salinan valid.",
+        "Zoom, geser halaman, dan layar penuh PDF disempurnakan. Status unduhan, progres belajar, serta navigasi bawah lebih jelas; Jelajahi lebih mudah dikenali."
+      ],
+      "notesEn": [
+        "The Bible reader improves passage search, translation comparison, related material, and return navigation. Notes and highlights are safer to back up and restore.",
+        "Sabbath School download, update, online, and offline choices are clearer. A full-edition PDF download includes every main lesson PDF; failed updates keep the valid copy.",
+        "PDF zoom, page movement, and full-screen controls are improved. Download status, study progress, and bottom navigation are clearer, with Explore easier to identify."
+      ],
+      "url": "https://github.com/AiWerek-Tech/sabatku-web/releases/tag/v0.1.0-beta16"
+    },
+    {
+      "versionName": "0.1.0-beta15",
+      "versionCode": 17,
+      "date": "2026-10-27",
+      "track": "github-beta",
+      "badgeId": "Arsip beta GitHub",
+      "badgeEn": "GitHub beta archive",
+      "headlineId": "Belajar bersama keluarga dan membaca buku lebih nyaman",
+      "headlineEn": "Family learning and a more comfortable book reader",
+      "notesId": [
+        "Alive in Jesus kini mencakup pengalaman Baby Steps dan Beginner dalam Bahasa Indonesia, termasuk pendampingan orang tua, panduan guru, dan Parent Time Baby Steps untuk empat triwulan.",
+        "Kindergarten dan Primary memiliki alur belajar sesuai usia serta Junior PowerPoints dilengkapi ringkasan Power Text dan jawaban diskusi.",
+        "Halaman Sekolah Sabat, perpustakaan buku dengan daftar isi bertingkat, serta sinkronisasi Beranda dan pengingat diselaraskan."
+      ],
+      "notesEn": [
+        "Alive in Jesus adds Indonesian Baby Steps and Beginner learning experiences, parent support, teacher guides, and Baby Steps Parent Time for all four quarters.",
+        "Kindergarten and Primary have age-appropriate learning flows, while Junior PowerPoints includes Power Text summaries and weekly discussion answers.",
+        "Sabbath School layout, hierarchical book contents, in-book search, and Home/reminder synchronization were improved."
+      ],
+      "url": "https://github.com/AiWerek-Tech/sabatku-web/releases/tag/v0.1.0-beta15"
+    },
+    {
+      "versionName": "0.1.0-beta14",
+      "versionCode": 16,
+      "date": "2026-10-20",
+      "track": "github-beta",
+      "badgeId": "Arsip beta GitHub",
+      "badgeEn": "GitHub beta archive",
+      "headlineId": "Kindergarten, bacaan, sinkronisasi, dan pengingat Sabat",
+      "headlineEn": "Kindergarten, reading, sync, and Sabbath reminders",
+      "notesId": [
+        "Alive in Jesus Kindergarten Triwulan IV 2026 berbahasa Indonesia tersedia dalam Panduan Murid dan Panduan Guru.",
+        "Pembaca buku, pelajaran, dan PDF mendapat kendali layar penuh dan toolbar yang lebih andal; sinkronisasi akun Google diperkuat."
+      ],
+      "notesEn": [
+        "Alive in Jesus Kindergarten Q4 2026 is available in Indonesian with separate Student and Teacher Guides.",
+        "Book, lesson, and PDF readers add improved full-screen controls alongside safer Google account sync and reminder recovery."
+      ],
+      "url": "https://github.com/AiWerek-Tech/sabatku-web/releases/tag/v0.1.0-beta14"
+    },
+    {
+      "versionName": "0.1.0-beta13",
+      "versionCode": 15,
+      "date": "2026-10-16",
+      "track": "github-beta",
+      "badgeId": "Arsip beta GitHub",
+      "badgeEn": "GitHub beta archive",
+      "headlineId": "Sabat, widget, Beranda, dan Primary",
+      "headlineEn": "Sabbath, widgets, Home, and Primary",
+      "notesId": [
+        "Hadir widget layar utama (Ringkasan, Sekolah Sabat, Alkitab, Sabat), pengingat Sabat & Doa 777 dengan pilihan volume dan lagu, serta Alive in Jesus Primary."
+      ],
+      "notesEn": [
+        "Added Home screen widgets (Overview, Sabbath School, Bible, Sabbath), strengthened Sabbath & Prayer 777 reminders, and introduced Alive in Jesus Primary."
+      ],
+      "url": "https://github.com/AiWerek-Tech/sabatku-web/releases/tag/v0.1.0-beta13"
+    },
+    {
+      "versionName": "0.1.0-beta12",
+      "versionCode": 14,
+      "date": "2026-10-15",
+      "track": "github-beta",
+      "badgeId": "Arsip beta GitHub",
+      "badgeEn": "GitHub beta archive",
+      "headlineId": "Pembaruan materi, aktivitas interaktif, dan pembaca PDF",
+      "headlineEn": "Lesson updates, interactive activities, and PDF reading",
+      "notesId": [
+        "Revisi per pelajaran, pemulihan aktivitas interaktif Real-Time Faith offline, urutan kelas, kontrol PDF, pemuatan sampul, dan navigasi perpustakaan disempurnakan."
+      ],
+      "notesEn": [
+        "Lesson-level revisions, offline Real-Time Faith activity recovery, class ordering, PDF controls, cover loading, and library navigation were improved."
+      ],
+      "url": "https://github.com/AiWerek-Tech/sabatku-web/releases/tag/v0.1.0-beta12"
+    },
+    {
+      "versionName": "0.1.0-beta11",
+      "versionCode": 13,
+      "date": "2026-10-12",
+      "track": "github-beta",
+      "badgeId": "Arsip beta GitHub",
+      "badgeEn": "GitHub beta archive",
+      "headlineId": "Bacaan lebih nyaman, kalender gereja, dan pembaruan aplikasi lebih aman",
+      "headlineEn": "Comfortable reading, church calendar, and safer app updates",
+      "notesId": [
+        "Penyempurnaan dasbor terjadwal, Renungan Harian, Kalender Gereja 2026, Peraturan Jemaat offline, serta pemeriksaan integritas APK GitHub Releases."
+      ],
+      "notesEn": [
+        "Improved scheduled dashboard readings, Daily Devotional, 2026 Church Calendar, offline Church Manual, and integrity-verified app updates."
+      ],
+      "url": "https://github.com/AiWerek-Tech/sabatku-web/releases/tag/v0.1.0-beta11"
+    },
+    {
+      "versionName": "0.1.0-beta10",
+      "versionCode": 12,
+      "date": "2026-10-12",
+      "track": "github-beta",
+      "badgeId": "Arsip beta GitHub",
+      "badgeEn": "GitHub beta archive",
+      "headlineId": "Penyempurnaan bacaan dan pengingat Sabat",
+      "headlineEn": "Reading and Sabbath improvements",
+      "notesId": [
+        "Bacaan terjadwal, kendali tampilan bacaan, kalender gereja, pengingat Sabat, dan Doa 777 disempurnakan."
+      ],
+      "notesEn": [
+        "Scheduled readings, reading controls, church calendar, Sabbath reminders, and Prayer 777 were improved."
+      ],
+      "url": "https://github.com/AiWerek-Tech/sabatku-web/releases/tag/v0.1.0-beta10"
+    },
+    {
+      "versionName": "0.1.0-beta09",
+      "versionCode": 11,
+      "date": "2026-10-10",
+      "track": "github-beta",
+      "badgeId": "Arsip beta GitHub",
+      "badgeEn": "GitHub beta archive",
+      "headlineId": "Materi belajar lengkap offline & perpustakaan buku digital",
+      "headlineEn": "Offline companion study library & digital books",
+      "notesId": [
+        "Materi Sekolah Sabat offline beserta Penuntun Guru, aktivitas interaktif Cornerstone, perpustakaan buku digital, dan mekanisme pembaruan dalam aplikasi."
+      ],
+      "notesEn": [
+        "Added offline Sabbath School companion materials, interactive Cornerstone activities, digital book library, and in-app update notifications."
+      ],
+      "url": "https://github.com/AiWerek-Tech/sabatku-web/releases/tag/v0.1.0-beta09"
+    },
+    {
+      "versionName": "0.1.0-beta08",
+      "versionCode": 10,
+      "date": "2026-10-10",
+      "track": "github-beta",
+      "badgeId": "Arsip beta GitHub",
+      "badgeEn": "GitHub beta archive",
+      "headlineId": "Penuntun Guru Cornerstone Connections",
+      "headlineEn": "Cornerstone Connections Teacher's Guide",
+      "notesId": [
+        "Buka Penuntun Guru mingguan yang sesuai langsung dari setiap pelajaran siswa, baca pendahuluan triwulan secara terpisah, dan simpan offline."
+      ],
+      "notesEn": [
+        "Open the matching weekly teacher guide from each student lesson, read quarterly introductions separately, and save for offline access."
+      ],
+      "url": "https://github.com/AiWerek-Tech/sabatku-web/releases/tag/v0.1.0-beta08"
+    },
+    {
+      "versionName": "0.1.0-beta01",
+      "versionCode": 1,
+      "date": "2026-10-08",
+      "track": "retrospective",
+      "badgeId": "Pra-rilis perdana",
+      "badgeEn": "First public pre-release",
+      "headlineId": "Ekosistem SabatKu diperkenalkan kepada publik (beta01–beta07)",
+      "headlineEn": "Public introduction of SabatKu ecosystem (beta01–beta07)",
+      "notesId": [
+        "Alkitab TB dan KJV offline, Sekolah Sabat Indonesia/Inggris berbagai kelas dan bacaan pendamping dewasa, waktu Sabat & kartu Sabat, serta profil belajar dan sinkronisasi Google opsional."
+      ],
+      "notesEn": [
+        "Offline TB and KJV Bible, bilingual Sabbath School with adult companion guides, local Sabbath countdowns and reminders, and personal learning profiles with optional Google sync."
+      ],
+      "summaryNoteId": "Ringkasan retrospektif fitur sepanjang pra-rilis perdana beta01 hingga beta07.",
+      "summaryNoteEn": "Retrospective summary of capabilities developed across beta01 through beta07."
+    }
+  ]
+}
