@@ -57,30 +57,30 @@ class ReleaseNotesCheckTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             web_dir, android_dir = self._copy_minimal_fixture(Path(td))
             gradle_path = android_dir / "app" / "build.gradle.kts"
-            gradle_text = gradle_path.read_text(encoding="utf-8").replace('.orElse("1.0.2")', '.orElse("0.1.0-beta17")')
+            gradle_text = gradle_path.read_text(encoding="utf-8").replace('.orElse("1.0.4")', '.orElse("0.1.0-beta17")')
             gradle_path.write_text(gradle_text, encoding="utf-8")
 
             errors = crn.check_release_notes(web_dir, android_dir)
             self.assertTrue(any("conflicts with releases.json" in e for e in errors), errors)
 
-    def test_allows_future_1_0_3_on_web_while_android_default_is_1_0_2(self) -> None:
+    def test_allows_future_1_0_5_on_web_while_android_default_is_1_0_4(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             web_dir, android_dir = self._copy_minimal_fixture(Path(td))
             payload = json.loads((web_dir / "site" / "releases.json").read_text(encoding="utf-8"))
             future = copy.deepcopy(payload["releases"][0])
-            future["versionName"] = "1.0.3"
-            future["versionCode"] = 23
-            future["date"] = "2026-11-20"
-            payload["latestVersion"] = "1.0.3"
-            payload["latestVersionCode"] = 23
+            future["versionName"] = "1.0.5"
+            future["versionCode"] = 27
+            future["date"] = "2026-12-05"
+            payload["latestVersion"] = "1.0.5"
+            payload["latestVersionCode"] = 27
             payload["releases"].insert(0, future)
             (web_dir / "site" / "releases.json").write_text(json.dumps(payload), encoding="utf-8")
 
             html_path = web_dir / "site" / "index.html"
             html = html_path.read_text(encoding="utf-8")
             html = html.replace(
-                '<article class="changelog-card" data-version-code="22">',
-                '<article class="changelog-card" data-version-code="23">1.0.3</article>\n<article class="changelog-card" data-version-code="22">',
+                '<article class="changelog-card" data-version-code="26">',
+                '<article class="changelog-card" data-version-code="27">1.0.5</article>\n<article class="changelog-card" data-version-code="26">',
             )
             html_path.write_text(html, encoding="utf-8")
 

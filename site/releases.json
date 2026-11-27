@@ -1,11 +1,36 @@
 {
   "schemaVersion": 1,
-  "latestVersion": "1.0.3",
-  "latestVersionCode": 25,
+  "latestVersion": "1.0.4",
+  "latestVersionCode": 26,
   "channel": "google-play-closed",
   "webChangelogUrl": "https://aiwerek-tech.github.io/sabatku-web/#pembaruan",
   "playTestingUrl": "https://play.google.com/store/apps/details?id=id.sabatku.app",
   "releases": [
+    {
+      "versionName": "1.0.4",
+      "versionCode": 26,
+      "date": "2026-11-27",
+      "track": "play-closed",
+      "badgeId": "Pengujian tertutup · Terbaru",
+      "badgeEn": "Closed testing · Latest",
+      "headlineId": "Widget modern, 38 Ayat Hari Sabat, Notifikasi pintar, Daftar Isi editorial & tampilan Tablet/IFP",
+      "headlineEn": "Modern widgets, 38 Sabbath Bible passages, smart notifications, editorial book TOC & Tablet/IFP layout",
+      "notesId": [
+        "Halaman baru Ayat Alkitab tentang Hari Sabat (Kejadian – Wahyu): 38 bacaan pilihan dalam 7 tema dengan teks lengkap Alkitab TB/KJV offline, progres bacaan, pencarian, dan akses langsung dari Waktu Sabat maupun Renungan Buka Sabat.",
+        "Desain ulang total 5 Widget Layar Beranda (Ibadah Hari Ini, Waktu Sabat, Bacaan Hari Ini, Ayat & Alkitab, serta Doa 777) lengkap dengan tema Senja Sabat, Adaptif, dan Kaca, singkatan resmi 66 kitab, serta hitung mundur akurat.",
+        "Halaman Notifikasi & Pengumuman kini terhubung otomatis ke server konten SabatKu dengan pratinjau ringkas, dukungan gambar dan berbagai template, status dibaca per item, titik merah lonceng akurat, serta sinkronisasi konten otomatis hemat kuota.",
+        "Penyempurnaan Daftar Isi Perpustakaan Buku bergaya editorial dengan progres bacaan, filter cepat, tab triwulan, serta dukungan tampilan 2 kolom yang seimbang untuk Tablet, Foldable, dan layar besar/IFP.",
+        "Menu Jelajahi lebih ringkas dengan satu pencarian terpadu seluruh konten, perbaikan popup ayat agar tidak tertutup bilah navigasi, dan bahasa antarmuka yang semakin bersih untuk rilis publik."
+      ],
+      "notesEn": [
+        "New Sabbath in the Bible page (Genesis – Revelation): 38 curated passages across 7 themes with full offline TB/KJV Scripture text, study progress, search, and quick access from both Sabbath Time and Sabbath Opening Devotional.",
+        "Redesigned all 5 Home Screen Widgets (Today Overview, Sabbath Time, Daily Readings, Bible & Daily Verse, and Prayer 777) with Twilight, Adaptive, and Glass themes, standard 66-book abbreviations, and accurate countdowns.",
+        "Notifications & Announcements now sync automatically from the SabatKu content server with compact previews, image & template support, per-item read tracking, accurate unread bell indicators, and low-data background content sync.",
+        "Editorial Book Library Table of Contents with reading progress, quick filters, quarterly tabs, and balanced multi-column layouts for Tablets, Foldables, and large IFP displays.",
+        "Cleaner Explore menu with a single unified search entry, bottom-bar inset fix for Scripture popups, and polished user-friendly wording across the app for public release."
+      ],
+      "url": "https://aiwerek-tech.github.io/sabatku-web/#pembaruan"
+    },
     {
       "versionName": "1.0.3",
       "versionCode": 25,
